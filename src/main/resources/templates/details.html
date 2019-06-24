@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" name="viewport" content="width=device-width, initial-scale=1">
+    <title>Bookie</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" th:href="@{/css/style.css}"/>
+</head>
+<body>
+
+<th:block th:insert="fragments/generals.html :: header" }></th:block>
+<th:block th:insert="fragments/generals.html :: navbar" }></th:block>
+
+
+<div class="container-fluid bg-web">
+    <div class=" mx-auto col-8 card mt-4 shadow p-3 mb-5" th:object="${details}">
+        <div class="card-body">
+            <h4 class="card-title font-weight-bold">Informacje o książce</h4>
+            <div class="card-text">
+                <h5 th:text="|Tytuł: *{title}|">Tytuł</h5>
+                <p th:text="|Opis: *{description}|">Opis</p>
+                <h5 th:text="|Autor: *{author.firstName} *{author.lastName}|">Autor</h5>
+                <p th:text="*{author.shortBio}"></p>
+                <h5 th:text="|Wydawca *{publisher.publisherName}|">Wydawca</h5>
+                <p th:text="|strona internetowa: *{publisher.wwwPage}|">Szczegóły</p>
+                <p th:text="|email: *{publisher.publisherInfo.email}|">Szczegóły</p>
+                <p th:text="|telefon: *{publisher.publisherInfo.telephone}|">Szczegóły</p>
+                <p th:text="|Adres: *{publisher.address.city}, *{publisher.address.street}, *{publisher.address.zip}|">
+                    Szczegóły</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

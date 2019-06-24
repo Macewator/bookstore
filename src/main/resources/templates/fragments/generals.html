@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" th:href="@{/css/style.css}"/>
+</head>
+<body>
+
+<div th:fragment="header" style="background-color: peru; height: 150px">
+    <h1 style="font-size: 3rem;">BOOKIE</h1>
+    <p class="lead" style="font-size: 1.8rem;">
+        <strong>Twoja</strong> ulubiona księgarnia.
+    </p>
+</div>
+
+<nav th:fragment="navbar" class="navbar navbar-expand-sm bg-dark navbar-dark sticky-top">
+    <a class="navbar-brand" href="#" th:href="@{/}">Bookie</a>
+    <ul class="navbar-nav">
+        <li class="nav-item">
+            <a class="nav-link" href="#" th:href="@{/register}">rejestracja</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="#" th:href="@{/books}">książki</a>
+        </li>
+    </ul>
+</nav>
+
+</body>
+</html>

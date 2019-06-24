@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" name="viewport" content="width=device-width, initial-scale=1">
+    <title>Bookie</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" th:href="@{/css/style.css}"/>
+    <style>
+        body{
+            background-color: ghostwhite;
+        }
+    </style>
+</head>
+<body>
+
+<th:block th:insert="fragments/generals.html :: header"}></th:block>
+<th:block th:insert="fragments/generals.html :: navbar"}></th:block>
+
+<div class="container-fluid bg-web bg">
+    <div class="row">
+        <div class="media border border-dark p-3 w-100 my-4 shadow p-3 mb-5 bg-info">
+            <h5 class="w-25 font-weight-bold">Rekomendacj</h5>
+            <div class="media-body h-100 border border-dark p-3">
+                <h4 th:text="${book.title}">Tytuł książki</h4>
+                <i th:text="|${book.author.firstName} ${book.author.lastName}|"></i>
+                <p th:text="${book.description}">Opis książki</p>
+                <a class="btn btn-sm btn-primary" style="align-self: center" th:href="@{/books/details(isbn=${book.isbn})}">
+                    zobacz
+                </a>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="media border border-dark p-3 w-100 my-4 shadow p-3 mb-5 bg-success">
+            <h5 class="w-25 font-weight-bold">Nowości</h5>
+            <div class="media-body h-100 border border-dark p-3" style="display: inline-block"
+                 th:each="newb: ${newBook}" th:object="${newb}">
+                <h4 th:text="*{title}">Tytuł książki</h4>
+                <i th:text="|*{author.firstName} *{author.lastName}|"></i>
+                <p th:text="*{description}">Opis książki</p>
+                <a class="btn btn-sm btn-primary" style="align-self: center" th:href="@{/books/details(isbn=${book.isbn})}">
+                    zobacz
+                </a>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="media border border-dark p-3 w-100 my-4 shadow p-3 mb-5 bg-secondary">
+            <h5 class="w-25 font-weight-bold">Bestsellery</h5>
+            <div class="media-body h-100 border border-dark p-3 d-inline-block"
+                 th:each="best: ${bestBooks}" th:object="${best}">
+                <h4 th:text="*{title}">Tytuł książki</h4>
+                <i th:text="|*{author.firstName} *{author.lastName}|"></i>
+                <p th:text="*{description}">Opis książki</p>
+                <a class="btn btn-sm btn-primary" style="align-self: center" th:href="@{/books/details(isbn=${book.isbn})}">
+                    zobacz
+                </a>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="media border border-dark p-3 my-4 w-100 shadow p-3 mb-5 bg-warning">
+            <h5 class="w-25 font-weight-bold">Oferta</h5>
+            <div class="media-body h-100 border border-dark p-3" style="display: inline-block"
+                 th:each="reg: ${regBooks}" th:object="${reg}">
+                <h4 th:text="*{title}">Tytuł książki</h4>
+                <i th:text="|*{author.firstName} *{author.lastName}|"></i>
+                <p th:text="*{description}">Opis książki</p>
+                <a class="btn btn-sm btn-primary" style="align-self: center" th:href="@{/books/details(isbn=${book.isbn})}">
+                    zobacz
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

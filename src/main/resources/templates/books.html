@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" name="viewport" content="width=device-width, initial-scale=1">
+    <title>Bookie</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" th:href="@{/css/style.css}"/>
+    <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
+    <style>
+        body {
+            background-color: ghostwhite;
+        }
+
+        .sidenav {
+            height: 100%;
+            width: 200px;
+            position: absolute;
+            z-index: 1;
+            top: 25%;
+            left: 0;
+            background-color: #111;
+            overflow-x: hidden;
+            padding-top: 20px;
+        }
+
+        .sidenav a {
+            padding: 6px 6px 6px 32px;
+            text-decoration: none;
+            font-size: 25px;
+            color: #818181;
+            display: block;
+        }
+
+        .sidenav a:hover {
+            color: #f1f1f1;
+        }
+
+        @media screen and (max-height: 450px) {
+            .sidenav {
+                padding-top: 15px;
+            }
+
+            .sidenav a {
+                font-size: 18px;
+            }
+        }
+    </style>
+</head>
+<body class="bg">
+
+<th:block th:insert="fragments/generals.html :: header" }></th:block>
+<th:block th:insert="fragments/generals.html :: navbar" }></th:block>
+
+<div class="container-fluid bg-web">
+
+    <div class="sidenav d-inline-block">
+        <h4 class="text-white mt-4 ml-4">Sortowanie</h4>
+        <a href="#" th:href="@{/books/sort}">Tytuł</a>
+        <a href="#" th:href="@{/books/sort(type=author)}">Autor</a>
+        <a href="#" th:href="@{/books/sort(type=publisher)}">Wydawca</a>
+        <a href="#" th:href="@{/books/sort(type=price)}">Cena</a>
+    </div>
+
+    <div class="row">
+        <form class="col-4 mx-auto mt-3" action="#" th:action="@{/books/search}" method="get">
+            <label>
+                <input type="text" th:name="value" placeholder="search..">
+                <input type="radio" th:name="category" value="title" th:text="tytuł">
+                <input type="radio" th:name="category" value="author" th:text="autor">
+                <input type="radio" th:name="category" value="publisher" th:text="wydawca">
+            </label><br>
+            <input type="submit" value="szukaj">
+        </form>
+
+    </div>
+
+    <div class="col-3 mx-auto mt-1 text-warning" th:if="${alert} != null">
+        <p th:text="${alert}"></p>
+    </div>
+
+    <div class="list-group col-6 offset-3 mt-4 shadow p-3 mb-5 d-inline-block">
+        <a href="#" class="list-group-item list-group-item-action flex-column align-items-start"
+           th:each="book: ${books}" th:object="${book}" th:href="@{/books/details(isbn=${book.isbn})}">
+            <div class="d-flex w-100 justify-content-between">
+                <h5 class="mb-1" th:text="|Tytuł: *{title}|">List group item heading</h5>
+                <p th:text="|Autor: *{author.firstName} *{author.lastName}|">3 days ago</p>
+            </div>
+            <p class="mb-1" th:text="|Wydawca: *{publisher.publisherName}, (cena: *{price} zł)|">Donec id elit non mi porta
+                gravida at eget metus. Maecenas sed diam eget risus varius blandit.</p>
+        </a>
+    </div>
+</div>
+
+</body>
+</html>

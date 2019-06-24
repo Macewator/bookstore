@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" name="viewport" content="width=device-width, initial-scale=1">
+    <title>Bookie</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" th:href="@{/css/style.css}"/>
+    <style>
+        body{
+            background-color: ghostwhite;
+        }
+    </style>
+</head>
+<body>
+
+<th:block th:insert="fragments/generals.html :: header" }></th:block>
+<th:block th:insert="fragments/generals.html :: navbar" }></th:block>
+
+<div class="container-fluid bg-web">
+    <div class="col-md-6 offset-3 mt-4">
+        <form action="#" th:action="@{/register}" method="post" th:object="${client}">
+            <div class="form-row">
+                <div class="col-md-4 mb-4">
+                    <label for="validationUserName">User name</label>
+                    <input th:field="*{userName}" type="text" class="form-control" id="validationUserName" placeholder="User name" required>
+                    <p th:errors="*{userName}">invalid user name</p>
+                </div>
+                <div class="col-md-4 mb-4">
+                    <label for="validationFirstName">First name</label>
+                    <input th:field="*{firstName}" type="text" class="form-control" id="validationFirstName" placeholder="First name" required>
+                    <p th:errors="*{firstName}">invalid first name</p>
+                </div>
+                <div class="col-md-4 mb-4">
+                    <label for="validationLastName">Last name</label>
+                    <input th:field="*{lastName}" type="text" class="form-control" id="validationLastName" placeholder="Last name" required>
+                    <p th:errors="*{lastName}">invalid last name</p>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="col-md-4 mb-4">
+                    <label for="validationPassword">Password</label>
+                    <input th:field="*{password}" type="password" class="form-control" id="validationPassword" placeholder="Password" required>
+                    <p th:errors="*{password}">invalid password</p>
+                </div>
+                <div class="col-md-4 mb-4">
+                    <label for="validationEmail">Email</label>
+                    <input th:field="*{userInfo.email}" type="email" class="form-control" id="validationEmail" placeholder="Email" required>
+                    <p th:errors="*{userInfo.email}">invalid email</p>
+                </div>
+                <div class="col-md-4 mb-4">
+                    <label for="validationTelephone">Telephone</label>
+                    <input th:field="*{userInfo.telephone}" type="text" class="form-control" id="validationTelephone" placeholder="Telephone" required>
+                    <p th:errors="*{userInfo.telephone}">invalid telephone</p>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="col-md-4 mb-4">
+                    <label for="validationCity">City</label>
+                    <input th:field="*{address.city}" type="text" class="form-control" id="validationCity" placeholder="City" required>
+                    <p th:errors="*{address.city}">invalid city</p>
+                </div>
+                <div class="col-md-4 mb-4">
+                    <label for="validationStreet">Street</label>
+                    <input th:field="*{address.street}" type="text" class="form-control" id="validationStreet" placeholder="Street" required>
+                    <p th:errors="*{address.street}">invalid street</p>
+                </div>
+                <div class="col-md-4 mb-4">
+                    <label for="validationZip">Zip</label>
+                    <input th:field="*{address.zip}" type="text" class="form-control" id="validationZip" placeholder="Zip" required>
+                    <p th:errors="*{address.zip}">invalid zip</p>
+                </div>
+            </div>
+            <button class="btn btn-primary btn-sm" type="submit">Submit form</button>
+        </form>
+    </div>
+</div>
+
+</body>
+</html>
