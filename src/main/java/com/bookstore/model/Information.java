@@ -10,11 +10,9 @@ import javax.validation.constraints.Email;
 public class Information {
 
     @Email
-    @Column(unique = true)
     private String email;
 
     @TelephoneNumber
-    @Column(unique = true)
     private String telephone;
 
     public Information() {

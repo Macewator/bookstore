@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" name="viewport" content="width=device-width, initial-scale=1">
+    <title>Bookie</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" th:href="@{/css/styles.css}"/>
+</head>
+<body>
+<div class="container">
+    <div class="jumbotron panel-jumbo">
+        <div class="text-center text-white jumbo-container">
+            <h1 class="display-3" th:text="|Zamówienie ${order.id}|">Zamówienie 123</h1>
+            <th:block th:switch="${order.status}">
+                <h2 th:case="${T(com.bookstore.model.OrderStatus).NEW}">Status: Nowe</h2>
+                <h2 th:case="${T(com.bookstore.model.OrderStatus).IN_PROGRESS}">Status: W realizacji</h2>
+                <h2 th:case="${T(com.bookstore.model.OrderStatus).COMPLETE}">Status: Zrealizowane</h2>
+            </th:block>
+            <a th:href="@{/panel/zamowienia}">Lista zamówień</a>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-8 offset-lg-2" th:if="${!order.books.isEmpty()}">
+            <table class="table">
+                <thead>
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Nazwa</th>
+                    <th scope="col">Cena</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="book, idx: ${order.books}">
+                    <th scope="row" th:text="${idx.index+1}">1</th>
+                    <td th:text="${book.title}"></td>
+                    <td th:text="|${book.price}zł|"></td>
+                </tr>
+                </tbody>
+            </table>
+            <div class="text-right">
+                <h5 th:text="|Do zapłaty: ${#numbers.formatDecimal(order.orderPrice,1,2,'COMMA')}zł|"></h5>
+            </div>
+            <div class="text-center" th:if="${order.status != T(com.bookstore.model.OrderStatus).COMPLETE}">
+                <form action="#" th:action="@{|/panel/zamowienie/${order.id}|}" method="post">
+                    <button class="btn btn-primary"
+                            th:if="${order.status == T(com.bookstore.model.OrderStatus).NEW}">Realizuj</button>
+                    <button class="btn btn-success"
+                            th:if="${order.status == T(com.bookstore.model.OrderStatus).IN_PROGRESS}">Zakończ</button>
+                </form>
+            </div>
+        </div>
+        <div class="col-12">
+            <div th:if="${order.books.isEmpty()}" class="text-center">
+                <h2>Zamówienie jest puste</h2>
+                <a href="#" th:href="@{/panel/zamowienia}">Wróć do listy zamówień</a>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

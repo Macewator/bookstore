@@ -15,11 +15,15 @@ public interface BookRepository extends JpaRepository<Book, Long> {
     Book findRandomBook();
 
     @Query(nativeQuery = true, value = "SELECT * FROM book WHERE status=:status LIMIT 2")
-    List<Book> findAllByStatus(@Param("status") String status);
+    List<Book> findAllByStatusForHomePage(@Param("status") String status);
 
     List<Book> findAllByTitleContainingIgnoreCase(String title);
 
     List<Book> findAllByAuthor_LastNameContainingIgnoreCase(String lastName);
 
     List<Book> findAllByPublisher_PublisherNameContainingIgnoreCase(String publisherName);
+
+    List<Book> findAllByPublisher_Id(Long publisherId);
+
+    List<Book> findAllByAuthor_Id(Long id);
 }

@@ -14,7 +14,7 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 @Target({ METHOD, FIELD, CONSTRUCTOR, PARAMETER, ANNOTATION_TYPE })
 @Retention(RUNTIME)
 public @interface TelephoneNumber {
-    String message() default "telephone number should have 11 digits";
+    String message() default "numer telefonu musi zawierać 11 cyfr";
     Class<?>[] groups() default {};
     Class<? extends Payload>[] payload() default {};
 

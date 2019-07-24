@@ -3,6 +3,7 @@ package com.bookstore.security;
 import com.bookstore.model.Client;
 import com.bookstore.model.ClientRole;
 import com.bookstore.repository.ClientRepository;
+import com.bookstore.service.ClientService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -18,29 +19,28 @@ import java.util.Set;
 @Component
 public class CustomUserDetailsService implements UserDetailsService {
 
-    private ClientRepository clientRepository;
+    private ClientService clientService;
 
-    @Autowired
-    public void setClientRepository(ClientRepository clientRepository) {
-        this.clientRepository = clientRepository;
+    public CustomUserDetailsService(ClientService clientService) {
+        this.clientService = clientService;
     }
 
     @Override
-    public UserDetails loadUserByUsername(String userName) throws UsernameNotFoundException {
-        Optional<Client> client = clientRepository.findByUserName(userName);
-        if(client.isPresent()){
+    public UserDetails loadUserByUsername(String userName) {
+        Optional<Client> client = clientService.findClientForLogin(userName);
+        if (client.isPresent()) {
             return new org.springframework.security.core.userdetails.User(
                     client.get().getUserName(),
                     client.get().getPassword(),
                     convertAuthorities(client.get().getClientRoles()));
-        }else {
+        } else {
             throw new UsernameNotFoundException("User not found");
         }
     }
 
     private Set<GrantedAuthority> convertAuthorities(Set<ClientRole> clientRoles) {
         Set<GrantedAuthority> authorities = new HashSet<>();
-        for(ClientRole cr: clientRoles) {
+        for (ClientRole cr : clientRoles) {
             authorities.add(new SimpleGrantedAuthority(cr.getRole()));
         }
         return authorities;

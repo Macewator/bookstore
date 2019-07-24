@@ -1,4 +1,4 @@
-package com.bookstore.model;
+package com.bookstore.util;
 
 public enum  OrderStatus {
 

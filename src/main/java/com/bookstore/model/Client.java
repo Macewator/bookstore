@@ -1,24 +1,29 @@
 package com.bookstore.model;
 
-import org.hibernate.annotations.Fetch;
-import org.hibernate.annotations.FetchMode;
-
+import com.bookstore.validate.Password;
 import javax.persistence.*;
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 
+import java.io.Serializable;
 import java.util.*;
 
 @Entity
 @Table(name = "client")
-public class Client {
+public class Client implements Serializable {
+
+    private static final long serialVersionUID = 5206902368022108208L;
 
     @Id
-    @NotBlank
-    @Column(name = "id_user_name", unique = true, length = 20)
-    private String userName;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id_client")
+    private Long id;
 
     @NotBlank
+    @Column(name = "user_name", unique = true)
+    private String userName;
+
+    @Password
     private String password;
 
     @NotBlank
@@ -38,19 +43,23 @@ public class Client {
     private Address address;
 
     @ManyToMany(fetch = FetchType.EAGER)
-    @Fetch(FetchMode.SELECT)
     @JoinTable(name = "client_roles",
-            joinColumns = @JoinColumn(name = "user_name_id", referencedColumnName = "id_user_name"),
-            inverseJoinColumns = @JoinColumn(name = "client_role_id", referencedColumnName = "id_client_role"))
+            joinColumns = @JoinColumn(name = "client_id"),
+            inverseJoinColumns = @JoinColumn(name = "client_role_id"))
     private Set<ClientRole> clientRoles = new HashSet<>();
 
-    @OneToMany(mappedBy = "client", fetch = FetchType.EAGER)
-    private List<Order> orders = new ArrayList<>();
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "credit_card_id")
+    private CreditCard creditCards;
+
+    @OneToMany(mappedBy = "client", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    private List<Order> orders;
 
     public Client() {
     }
 
-    public Client(@NotBlank String userName, @NotBlank String password, @NotBlank String firstName, @NotBlank String lastName, Information userInfo, Address address) {
+    public Client(@NotBlank String userName, @Password String password, @NotBlank String firstName,
+                  @NotBlank String lastName, Information userInfo, Address address) {
         this.userName = userName;
         this.password = password;
         this.firstName = firstName;
@@ -115,6 +124,14 @@ public class Client {
         this.clientRoles = clientRoles;
     }
 
+    public CreditCard getCreditCards() {
+        return creditCards;
+    }
+
+    public void setCreditCards(CreditCard creditCards) {
+        this.creditCards = creditCards;
+    }
+
     public List<Order> getOrders() {
         return orders;
     }
@@ -123,23 +140,4 @@ public class Client {
         this.orders = orders;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Client client = (Client) o;
-        return Objects.equals(userName, client.userName) &&
-                Objects.equals(password, client.password) &&
-                Objects.equals(firstName, client.firstName) &&
-                Objects.equals(lastName, client.lastName) &&
-                Objects.equals(userInfo, client.userInfo) &&
-                Objects.equals(address, client.address) &&
-                Objects.equals(clientRoles, client.clientRoles) &&
-                Objects.equals(orders, client.orders);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(userName, password, firstName, lastName, userInfo, address, clientRoles, orders);
-    }
 }

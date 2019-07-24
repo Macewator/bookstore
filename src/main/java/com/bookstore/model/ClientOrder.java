@@ -1,5 +1,6 @@
 package com.bookstore.model;
 
+import com.bookstore.util.OrderStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.annotation.SessionScope;
 
@@ -10,7 +11,7 @@ public class ClientOrder {
     private Order order;
 
     public ClientOrder() {
-        clear();
+        prepareNewOrder();
     }
 
     public Order getOrder() {
@@ -21,8 +22,12 @@ public class ClientOrder {
         order.getBooks().add(book);
     }
 
-    public void clear() {
+    public void prepareNewOrder() {
         order = new Order();
-        order.setOrderStatus(OrderStatus.NEW);
+        order.setStatus(OrderStatus.NEW);
+    }
+
+    public void clearCurrentOrder(){
+        order.getBooks().removeAll(order.getBooks());
     }
 }

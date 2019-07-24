@@ -1,9 +1,6 @@
 package com.bookstore.model;
 
-import org.hibernate.validator.constraints.URL;
-
 import javax.persistence.*;
-import javax.validation.constraints.NotBlank;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -16,11 +13,9 @@ public class Publisher implements Comparable<Publisher>{
     @Column(name = "id_publisher")
     private Long id;
 
-    @NotBlank
     @Column(name = "publisher_name", unique = true)
     private String publisherName;
 
-    @URL
     @Column(name = "www_page", unique = true)
     private String wwwPage;
 
@@ -37,7 +32,7 @@ public class Publisher implements Comparable<Publisher>{
     public Publisher() {
     }
 
-    public Publisher(@NotBlank String publisherName, @URL String wwwPage, Information publisherInfo, Address address) {
+    public Publisher(String publisherName, String wwwPage, Information publisherInfo, Address address) {
         this.publisherName = publisherName;
         this.wwwPage = wwwPage;
         this.publisherInfo = publisherInfo;

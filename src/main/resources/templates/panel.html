@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" name="viewport" content="width=device-width, initial-scale=1">
+    <title>Bookie</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" th:href="@{/css/styles.css}"/>
+</head>
+<body>
+
+<div class="container">
+    <div class="jumbotron panel-jumbo">
+        <div class="container text-center text-white jumbo-container">
+            <h1 class="display-3">Bookie</h1>
+            <p>Zamówienia</p>
+            <a href="#" th:href="@{/}">Strona główna</a>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12">
+            <div class="text-center mb-2">
+                <a href="#" th:href="@{/panel/zamowienia(status=${T(com.bookstore.util.OrderStatus).NEW.name()})}"
+                   class="btn btn-warning mx-1">Nowe</a>
+                <a href="#" th:href="@{/panel/zamowienia(status=${T(com.bookstore.util.OrderStatus).IN_PROGRESS.name()})}"
+                   class="btn btn-primary mx-1">W realizacji</a>
+                <a href="#" th:href="@{/panel/zamowienia(status=${T(com.bookstore.util.OrderStatus).COMPLETE.name()})}"
+                   class="btn btn-success mx-1">Zrealizowane</a>
+            </div>
+        </div>
+    </div>
+    <div class="container col-6 offset-3">
+        <table class="table table-striped">
+            <thead>
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">Adres</th>
+                <th scope="col">Status</th>
+                <th scope="col">Edycja</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="order: ${orders}" th:object="${order}">
+                <th scope="row" th:text="*{id}">1</th>
+                <td th:text="|*{orderAddress.street} *{orderAddress.city} *{orderAddress.zip}|">Kościuszki 23, 42-200 Częstochowa</td>
+                <th:block th:switch="*{status}">
+                    <td th:case="${T(com.bookstore.util.OrderStatus).NEW}">Nowe</td>
+                    <td th:case="${T(com.bookstore.util.OrderStatus).IN_PROGRESS}">W realizacji</td>
+                    <td th:case="${T(com.bookstore.util.OrderStatus).COMPLETE}">Zrealizowane</td>
+                </th:block>
+                <td class="btn btn-sm btn-primary">
+                    <a href="#" th:href="@{|/panel/zamowienie/${order.id}|}" class="btn btn-primary">Edytuj</a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<th:block th:insert="fragments/generals.html :: footer"></th:block>
+</body>
+</html>

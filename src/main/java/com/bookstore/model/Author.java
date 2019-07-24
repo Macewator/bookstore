@@ -1,28 +1,24 @@
 package com.bookstore.model;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotBlank;
 import java.util.Set;
 import java.util.TreeSet;
 
 @Entity
 @Table(name = "author")
-public class Author implements Comparable<Author>{
+public class Author implements Comparable<Author> {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_author")
     private Long id;
 
-    @NotBlank
     @Column(name = "first_name")
     private String firstName;
 
-    @NotBlank
     @Column(name = "last_name")
     private String lastName;
 
-    @NotBlank
     @Column(name = "short_bio", unique = true, length = 100)
     private String shortBio;
 
@@ -32,7 +28,7 @@ public class Author implements Comparable<Author>{
     public Author() {
     }
 
-    public Author(@NotBlank String firstName, @NotBlank String lastName, @NotBlank String shortBio) {
+    public Author(String firstName, String lastName, String shortBio) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.shortBio = shortBio;

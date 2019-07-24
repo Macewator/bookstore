@@ -1,7 +1,71 @@
-.bg{
-    background-image: url("static/images/books2.jpg");
+.panel-jumbo {
+    background: url('../images/books2.jpg');
 }
 
-.bg-web{
-    background-color: purple;
+body {
+    background-color: ghostwhite;
 }
+
+textarea {
+    resize: none;
+}
+
+.sidenav input {
+    padding: 6px 6px 6px 32px;
+    text-decoration: none;
+    font-size: 15px;
+    color: #818181;
+    display: block;
+}
+
+.sidenav {
+    height: 200%;
+    width: 200px;
+    position: absolute;
+    z-index: 1;
+    top: 22%;
+    left: 0;
+    background-color: #111;
+    overflow-x: hidden;
+    padding-top: 20px;
+}
+
+.icon-a {
+    float: right;
+    padding: 6px 25px 6px 4px;
+    text-decoration: none;
+    font-size: 15px;
+    color: #818181;
+    display: inline;
+}
+
+.text-a {
+    padding: 6px 6px 6px 32px;
+    text-decoration: none;
+    font-size: 15px;
+    color: #818181;
+    display: block;
+}
+
+.sidenav p {
+    padding: 6px 6px 0 32px;
+    text-decoration: none;
+    font-size: 15px;
+    color: #818181;
+    display: inline-block;
+}
+
+.sidenav a:hover {
+    color: #f1f1f1;
+}
+
+@media screen and (max-height: 450px) {
+    .sidenav {
+        padding-top: 15px;
+    }
+
+    .sidenav a {
+        font-size: 12px;
+    }
+}
+

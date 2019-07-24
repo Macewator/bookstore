@@ -14,7 +14,7 @@ public class ZipValidator implements ConstraintValidator<Zip,String> {
     }
 
     @Override
-    public boolean isValid(String value, ConstraintValidatorContext constraintValidatorContext) {
-        return Pattern.matches(zipPattern,value);
+    public boolean isValid(String pattern, ConstraintValidatorContext constraintValidatorContext) {
+        return Pattern.matches(zipPattern,pattern);
     }
 }

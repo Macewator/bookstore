@@ -1,49 +1,47 @@
 package com.bookstore.model;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Pattern;
 
 @Entity
 @Table(name = "book")
-public class Book implements Comparable<Book>{
+public class Book implements Comparable<Book> {
 
     @Id
-    @Column(name = "id_book", unique = true, length = 10)
+    @Column(name = "id_book", length = 10)
     private Long isbn;
 
-    @NotBlank
     @Column(unique = true)
     private String title;
 
-    @NotBlank
     @Column(unique = true, length = 100)
     private String description;
 
-    @Pattern(regexp = "(\\d+\\.\\d{1,2})", message = "Price format: 00.00")
     private Double price;
 
-    @NotBlank
     @Column(nullable = false)
     private String status;
 
-    @ManyToOne
-    @JoinColumn(name = "author_id", referencedColumnName = "id_author")
+    @Column(name = "image_url", nullable = false)
+    private String imageUrl;
+
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "author_id")
     private Author author;
 
-    @ManyToOne
-    @JoinColumn(name = "publisher_id", referencedColumnName = "id_publisher")
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "publisher_id")
     private Publisher publisher;
 
     public Book() {
     }
 
-    public Book(Long isbn, @NotBlank String title, @NotBlank String description, @Pattern(regexp = "(\\d+\\.\\d{1,2})", message = "Price format: 00.00") Double price, @NotBlank String status) {
+    public Book(Long isbn, String title, String description, Double price, String status, String imageUrl) {
         this.isbn = isbn;
         this.title = title;
         this.description = description;
         this.price = price;
         this.status = status;
+        this.imageUrl = imageUrl;
     }
 
     public Long getIsbn() {
@@ -84,6 +82,14 @@ public class Book implements Comparable<Book>{
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
     }
 
     public Author getAuthor() {

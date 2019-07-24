@@ -1,31 +1,56 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
 <head>
-    <meta charset="UTF-8">
+    <meta charset="UTF-8" name="viewport" content="width=device-width, initial-scale=1">
     <title>Title</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
-    <link rel="stylesheet" type="text/css" th:href="@{/css/style.css}"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/styles.css}"/>
 </head>
 <body>
 
-<div th:fragment="header" style="background-color: peru; height: 150px">
+<div th:fragment="header" style="background-color: peru; height: 130px">
     <h1 style="font-size: 3rem;">BOOKIE</h1>
-    <p class="lead" style="font-size: 1.8rem;">
+    <p class="lead" style="font-size: 1.6rem;">
         <strong>Twoja</strong> ulubiona księgarnia.
     </p>
 </div>
 
 <nav th:fragment="navbar" class="navbar navbar-expand-sm bg-dark navbar-dark sticky-top">
-    <a class="navbar-brand" href="#" th:href="@{/}">Bookie</a>
+    <a class="navbar-brand" th:href="@{/}">Bookie</a>
     <ul class="navbar-nav">
         <li class="nav-item">
-            <a class="nav-link" href="#" th:href="@{/register}">rejestracja</a>
+            <a class="nav-link" th:href="@{/books}">książki</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link" href="#" th:href="@{/books}">książki</a>
+            <a class="nav-link" th:href="@{/register}">rejestracja</a>
+        </li>
+        <li class="nav-item">
+            <div sec:authorize="isAnonymous()">
+                <a class="nav-link" th:href="@{/loginform}">login</a>
+            </div>
+        </li>
+        <li class="nav-item">
+            <div sec:authorize="isAuthenticated()">
+                <form th:action="@{/process_logout}" method="POST">
+                    <input class="btn btn-link nav-link" type="submit" value="logout"/>
+                </form>
+            </div>
         </li>
     </ul>
+    <div style="padding-left: 77%">
+        <ul class="navbar-nav">
+            <li class="nav-item">
+                <a class="nav-link" th:href="@{/client/account}">Konto</a>
+            </li>
+        </ul>
+    </div>
 </nav>
+
+<footer th:fragment="footer" class="py-2 bg-dark text-white-50 fixed-bottom">
+    <div class="container text-center">
+        <small>Copyright &copy; Bookie</small>
+    </div>
+</footer>
 
 </body>
 </html>

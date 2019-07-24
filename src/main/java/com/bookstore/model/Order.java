@@ -1,5 +1,6 @@
 package com.bookstore.model;
 
+import com.bookstore.util.OrderStatus;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 
@@ -16,19 +17,35 @@ public class Order {
     @Column(name = "id_order")
     private Long id;
 
-    @Enumerated
-    private OrderStatus orderStatus;
+    @Column(name = "order_price")
+    private Double orderPrice;
+
+    @Embedded
+    private Address orderAddress;
+
+    @Enumerated(value = EnumType.STRING)
+    private OrderStatus status;
 
     @ManyToOne
-    @JoinColumn(name = "client_id", referencedColumnName = "id_user_name")
+    @JoinColumn(name = "client_id")
     private Client client;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
+    @Fetch(FetchMode.SELECT)
     @JoinTable(name = "ordered_books",
-            joinColumns = @JoinColumn(name = "order_id", referencedColumnName = "id_order"),
-            inverseJoinColumns = @JoinColumn(name = "book_id", referencedColumnName = "id_book")
+            joinColumns = @JoinColumn(name = "order_id"),
+            inverseJoinColumns = @JoinColumn(name = "book_id")
     )
     private List<Book> books = new ArrayList<>();
+
+    public Order() {
+    }
+
+    public Order(Double orderPrice, Address orderAddress, OrderStatus orderStatus) {
+        this.orderPrice = orderPrice;
+        this.orderAddress = orderAddress;
+        this.status = orderStatus;
+    }
 
     public Long getId() {
         return id;
@@ -38,12 +55,28 @@ public class Order {
         this.id = id;
     }
 
-    public OrderStatus getOrderStatus() {
-        return orderStatus;
+    public Double getOrderPrice() {
+        return orderPrice;
     }
 
-    public void setOrderStatus(OrderStatus orderStatus) {
-        this.orderStatus = orderStatus;
+    public void setOrderPrice(Double orderPrice) {
+        this.orderPrice = orderPrice;
+    }
+
+    public Address getOrderAddress() {
+        return orderAddress;
+    }
+
+    public void setOrderAddress(Address orderAddress) {
+        this.orderAddress = orderAddress;
+    }
+
+    public OrderStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(OrderStatus orderStatus) {
+        this.status = orderStatus;
     }
 
     public Client getClient() {
