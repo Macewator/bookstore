@@ -1,8 +1,6 @@
 package com.bookstore.model;
 
 import com.bookstore.util.OrderStatus;
-import org.hibernate.annotations.Fetch;
-import org.hibernate.annotations.FetchMode;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -24,14 +22,14 @@ public class Order {
     private Address orderAddress;
 
     @Enumerated(value = EnumType.STRING)
-    private OrderStatus status;
+    @Column(name = "order_status")
+    private OrderStatus orderStatus;
 
     @ManyToOne
-    @JoinColumn(name = "client_id")
+    @JoinColumn(name = "client_user_name", referencedColumnName = "client_user_name")
     private Client client;
 
-    @ManyToMany(fetch = FetchType.EAGER)
-    @Fetch(FetchMode.SELECT)
+    @ManyToMany
     @JoinTable(name = "ordered_books",
             joinColumns = @JoinColumn(name = "order_id"),
             inverseJoinColumns = @JoinColumn(name = "book_id")
@@ -44,7 +42,7 @@ public class Order {
     public Order(Double orderPrice, Address orderAddress, OrderStatus orderStatus) {
         this.orderPrice = orderPrice;
         this.orderAddress = orderAddress;
-        this.status = orderStatus;
+        this.orderStatus = orderStatus;
     }
 
     public Long getId() {
@@ -71,12 +69,12 @@ public class Order {
         this.orderAddress = orderAddress;
     }
 
-    public OrderStatus getStatus() {
-        return status;
+    public OrderStatus getOrderStatus() {
+        return orderStatus;
     }
 
-    public void setStatus(OrderStatus orderStatus) {
-        this.status = orderStatus;
+    public void setOrderStatus(OrderStatus orderStatus) {
+        this.orderStatus = orderStatus;
     }
 
     public Client getClient() {

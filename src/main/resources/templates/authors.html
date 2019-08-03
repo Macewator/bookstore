@@ -15,7 +15,7 @@
 <div class="container-fluid">
     <div class="sidenav d-inline-block">
         <h6 class="text-white mt-4 ml-4">Spis</h6>
-        <a class="text-a" th:href="@{/books}">Książki</a>
+        <a class="text-a" th:href="@{/books(page=1)}">Książki</a>
         <a class="text-a" th:href="@{/authors}">Autorzy</a>
         <a class="text-a" th:href="@{/publishers}">Wydawcy</a>
     </div>
@@ -29,7 +29,7 @@
     </div>
     <div class="list-group col-5 offset-4 mt-4 shadow p-3 mb-5 d-inline-block">
         <a href="#" class="list-group-item list-group-item-action flex-column align-items-start"
-           th:each="author: ${authors}" th:object="${author}" th:href="@{/authors/books(entity_id=${author.id})}">
+           th:each="author: ${authors}" th:object="${author}" th:href="@{/authors/books(entity_id=${author.id},page=1)}">
             <div class="text-center">
                 <h6 class="mb-1 font-weight-bold" th:text="|Autor: *{firstName} *{lastName}|">Imie i nazwisko</h6>
             </div>

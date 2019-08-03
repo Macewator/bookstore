@@ -13,11 +13,14 @@ import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
+
+import static com.bookstore.util.Action.*;
 
 @Service
 public class ClientService {
 
-    private static final String DEFAULT_ROLE = "ROLE_CLIENT";
+    private static final String DEFAULT_ROLE = "ROLE_ADMIN";
 
     private ClientRepository clientRepository;
     private ClientRoleRepository roleRepository;
@@ -139,9 +142,9 @@ public class ClientService {
             throw new IllegalArgumentException("aktualne hasło jest niepoprawne");
         } else if (oldPassword.equals(newPassword)) {
             throw new IllegalArgumentException("nowe hasło musi być inne od obecnego");
-        } else if(!Pattern.matches(passwordPattern, newPassword)) {
+        } else if (!Pattern.matches(passwordPattern, newPassword)) {
             throw new IllegalArgumentException("nowe hasło jest niepoprawne");
-        }else {
+        } else {
             String passwordHash = passwordEncoder.encode(newPassword);
             client.setPassword(passwordHash);
             clientRepository.save(client);
@@ -188,7 +191,7 @@ public class ClientService {
                 .collect(Collectors.toList());
     }
 
-    public List<Favorites> getAllFavorites(){
+    public List<Favorites> getAllFavorites() {
         return favoritesRepository.findAll();
     }
 
@@ -199,16 +202,55 @@ public class ClientService {
                 .collect(Collectors.toList());
     }
 
-    public String redirectForEntityType(Type entityType, Long isbn, Long entity_id) {
+    public List<Integer> pageCounter(int totalPages) {
+        List<Integer> pageNumbers = null;
+        if (totalPages >= 0) {
+            pageNumbers = IntStream.rangeClosed(1, totalPages)
+                    .boxed()
+                    .collect(Collectors.toList());
+        }
+        return pageNumbers;
+    }
+
+    public String redirectForEntityType(Type entityType, Long isbn, Long entity_id, String entity_url, String status, int page) {
         switch (entityType) {
             case TYPE_BOOK:
                 return "redirect:/books/details?isbn=" + isbn;
             case TYPE_AUTHOR:
-                return "redirect:/authors/books?entity_id=" + entity_id;
+                return "redirect:/authors/books?entity_id=" + entity_id + "&page=" + page;
             case TYPE_PUBLISHER:
-                return "redirect:/publishers/books?entity_id=" + entity_id;
+                return "redirect:/publishers/books?entity_id=" + entity_id + "&page=" + page;
+            case TYPE_STATUS:
+                if(entity_id != 999){
+                    return "redirect:/" + entity_url + "/books/" + status + "?page=" + page;
+                }else {
+                    return "redirect:/books/filter/" + status + "?page=" + page;
+                }
             default:
-                return "redirect:/books";
+                return "redirect:/books?page=" + page;
         }
     }
+
+    public String redirectForAction(
+            String action, Long entity_id, String type, String option, String value, String category, String status, Boolean search, String sort_type, int page) {
+        if(entity_id != 999){
+            if (search){
+                return "redirect:/authors/books/sort?entity_id=" + entity_id + "&type=" + type + "&option=" + option + "&status=" + status + "&search=" + search + "&sort_type=" + sort_type + "&page=" + page;
+            } else if (action.equals(ACTION_SORT_BOOKS.getAction())) {
+                return "redirect:/authors/books/sort?entity_id=" + entity_id + "&type=" + type + "&option=" + option + "&status=" + status + "&page=" + page;
+            } else if (action.equals(ACTION_SEARCH_BOOKS.getAction())) {
+                return "redirect:/authors/books/search?entity_id=" + entity_id + "&value=" + value + "&category=" + category + "&status=" + status + "&page=" + page;
+            }
+        }else {
+            if (search) {
+                return "redirect:/books/sort?type=" + type + "&option=" + option + "&status=" + status + "&search=" + search + "&sort_type=" + sort_type + "&page=" + page;
+            } else if (action.equals(ACTION_SORT_BOOKS.getAction())) {
+                return "redirect:/books/sort?type=" + type + "&option=" + option + "&status=" + status + "&page=" + page;
+            } else if (action.equals(ACTION_SEARCH_BOOKS.getAction())) {
+                return "redirect:/books/search?value=" + value + "&category=" + category + "&status=" + status + "&page=" + page;
+            }
+        }
+        return "redirect:/books?page=" + page;
+    }
+
 }

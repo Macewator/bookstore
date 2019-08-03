@@ -5,6 +5,9 @@ import com.bookstore.model.Book;
 import com.bookstore.repository.AuthorRepository;
 import com.bookstore.repository.BookRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.Comparator;
@@ -20,7 +23,7 @@ public class AuthorService {
     private static final String TITLE_SEARCH = "title";
     private static final String PUBLISHER_SEARCH = "publisher";
 
-    private static final String EMPTY_STATUS = "empty";
+    private static final String DEFAULT_BOOK_STATUS = "default";
 
     private AuthorRepository authorRepository;
     private BookRepository bookRepository;
@@ -35,96 +38,176 @@ public class AuthorService {
         return authorRepository.findAll();
     }
 
-    public List<Book> getAllBooksFromAuthor(Long id) {
-        return bookRepository.findAllByAuthor_Id(id);
+    public Page<Book> getAllBooksFromAuthor(Long id, int page) {
+        return bookRepository.findAllByAuthor_Id(id, PageRequest.of(page - 1, 3));
+    }
+
+    public Page<Book> filterAuthorBooksByStatus(Long id, String status, int page) {
+        return bookRepository.findAllByAuthor_IdAndStatus(id, status, PageRequest.of(page - 1, 3));
     }
 
     public List<Author> searchAuthor(String name) {
         return authorRepository.findAllByLastNameContainingIgnoreCase(name);
     }
 
-    public List<Book> searchBooksFromAuthor(Long authorId, String value, String category, String status) {
-        if (status.equals(EMPTY_STATUS)) {
-            return searchOptions(authorId, value, category);
+    public Page<Book> searchBooksFromAuthor(Long id, String value, String category, String status, int page) {
+        if (status.equals(DEFAULT_BOOK_STATUS)) {
+            return searchOptions(id, value, category, page);
         }
-        return searchOptionsWithStatus(authorId, value, category, status);
+        return searchOptionsWithStatus(id, value, category, status, page);
     }
 
-    private List<Book> searchOptions(Long authorId, String value, String category) {
+    private Page<Book> searchOptions(Long id, String value, String category, int page) {
         switch (category) {
             case TITLE_SEARCH:
-                return getAllBooksFromAuthor(authorId).stream()
-                        .filter(book -> dataValuesToLowerCase(book.getTitle(), value))
-                        .collect(Collectors.toList());
+                return bookRepository.findAllByAuthor_IdAndTitleContainingIgnoreCase(
+                        id, value, PageRequest.of(page - 1, 3));
             case PUBLISHER_SEARCH:
-                return getAllBooksFromAuthor(authorId).stream()
-                        .filter(book -> dataValuesToLowerCase(book.getPublisher().getPublisherName(), value))
-                        .collect(Collectors.toList());
+                return bookRepository.findAllByAuthor_IdAndPublisher_PublisherNameContainingIgnoreCase(
+                        id, value, PageRequest.of(page - 1, 3));
             default:
-                return getAllBooksFromAuthor(authorId);
+                return bookRepository.findAll(PageRequest.of(page - 1, 3));
         }
     }
 
-    private List<Book> searchOptionsWithStatus(Long authorId, String value, String category, String status) {
+    private Page<Book> searchOptionsWithStatus(Long id, String value, String category, String status, int page) {
         switch (category) {
             case TITLE_SEARCH:
-                return getAllBooksFromAuthor(authorId).stream()
-                        .filter(book -> book.getStatus().equals(status))
-                        .filter(book -> dataValuesToLowerCase(book.getTitle(), value))
-                        .collect(Collectors.toList());
+                return bookRepository.findAllByAuthor_IdAndTitleContainingIgnoreCaseAndStatus(
+                        id, value, status, PageRequest.of(page - 1, 3));
 
             case PUBLISHER_SEARCH:
-                return getAllBooksFromAuthor(authorId).stream()
-                        .filter(book -> book.getStatus().equals(status))
-                        .filter(book -> dataValuesToLowerCase(book.getPublisher().getPublisherName(), value))
-                        .collect(Collectors.toList());
+                return bookRepository.findAllByAuthor_IdAndPublisher_PublisherNameContainingIgnoreCaseAndStatus(
+                        id, value, status, PageRequest.of(page - 1, 3));
             default:
-                return getAllBooksFromAuthor(authorId);
+                return bookRepository.findAllByAuthor_IdAndStatus(id, status, PageRequest.of(page - 1, 3));
         }
     }
 
-    private boolean dataValuesToLowerCase(String firstValue, String secondValue) {
-        return firstValue.toLowerCase().contains(secondValue.toLowerCase());
+    private Page<Book> searchBooksFromAuthorWithSort(Long id, String value, String category, String status, int page, String sortType) {
+        if (status == null || status.equals(DEFAULT_BOOK_STATUS)) {
+            return searchOptionsWithSort(id, value, category, sortType, page);
+        }
+        return searchOptionsWithStatusAndSort(id,value, category, status, sortType, page);
     }
 
-    public List<Book> sortAuthorBooks(String type, String option, List<Book> books) {
+    private Page<Book> searchOptionsWithSort(Long id, String value, String category, String sortType, int page) {
+        switch (category) {
+            case TITLE_SEARCH:
+                return bookRepository.findAllByAuthor_IdAndTitleContainingIgnoreCase(
+                        id, value, PageRequest.of(page - 1, 3, Sort.by(sortType)));
+            case PUBLISHER_SEARCH:
+                return bookRepository.findAllByAuthor_IdAndPublisher_PublisherNameContainingIgnoreCase(
+                        id, value, PageRequest.of(page - 1, 3, Sort.by(sortType)));
+            default:
+                return bookRepository.findAll(PageRequest.of(page - 1, 3));
+        }
+    }
+
+    private Page<Book> searchOptionsWithStatusAndSort(Long id, String value, String category, String status, String sortType, int page) {
+        switch (category) {
+            case TITLE_SEARCH:
+                return bookRepository.findAllByTitleContainingIgnoreCaseAndStatus(
+                        value, status, PageRequest.of(page - 1, 3, Sort.by(sortType)));
+            case PUBLISHER_SEARCH:
+                return bookRepository.findAllByPublisher_PublisherNameContainingIgnoreCaseAndStatus(
+                        value, status, PageRequest.of(page - 1, 3, Sort.by(sortType)));
+            default:
+                return bookRepository.findAll(PageRequest.of(page - 1, 3));
+        }
+    }
+
+    public Page<Book> sortAuthorBooks(Long id, String type, String option, String status, int page) {
+        if (status == null || status.equals(DEFAULT_BOOK_STATUS)) {
+            return sortAuthorBooksOptions(id, type, option, page);
+        }
+        return sortAuthorBooksOptionsWithStatus(id, type, option, status, page);
+    }
+
+    private Page<Book> sortAuthorBooksOptions(Long id, String type, String option, int page) {
         switch (type) {
             case PUBLISHER_SORT:
                 if (option.equals("up")) {
-                    return books.stream()
-                            .sorted(Comparator.comparing(Book::getPublisher))
-                            .collect(Collectors.toList());
+                    return bookRepository.findAllByAuthor_Id(
+                            id, PageRequest.of(page - 1, 3, Sort.by("publisher")));
                 } else {
-                    return books.stream()
-                            .sorted(Comparator.comparing(Book::getPublisher).reversed())
+                    return bookRepository.findAllByAuthor_Id(
+                            id, PageRequest.of(page - 1, 3, Sort.by("publisher").descending()));
+                }
+            case PRICE_SORT:
+                if (option.equals("up")) {
+                    return bookRepository.findAllByAuthor_Id(
+                            id, PageRequest.of(page - 1, 3, Sort.by("price")));
+                } else {
+                    return bookRepository.findAllByAuthor_Id(
+                            id, PageRequest.of(page - 1, 3, Sort.by("price").descending()));
+                }
+            default:
+                if (option.equals("up")) {
+                    return bookRepository.findAllByAuthor_Id(
+                            id, PageRequest.of(page - 1, 3, Sort.by("title".toLowerCase())));
+                } else {
+                    return bookRepository.findAllByAuthor_Id(
+                            id, PageRequest.of(page - 1, 3, Sort.by("title".toLowerCase()).descending()));
+                }
+        }
+    }
+
+    private Page<Book> sortAuthorBooksOptionsWithStatus(Long id, String type, String option, String status, int page) {
+        switch (type) {
+            case PUBLISHER_SORT:
+                if (option.equals("up")) {
+                    return bookRepository.findAllByAuthor_IdAndStatus(
+                            id, status, PageRequest.of(page - 1, 3, Sort.by("publisher")));
+                } else {
+                    return bookRepository.findAllByAuthor_IdAndStatus(
+                            id, status, PageRequest.of(page - 1, 3, Sort.by("publisher").descending()));
+                }
+            case PRICE_SORT:
+                if (option.equals("up")) {
+                    return bookRepository.findAllByAuthor_IdAndStatus(
+                            id, status, PageRequest.of(page - 1, 3, Sort.by("price")));
+                } else {
+                    return bookRepository.findAllByAuthor_IdAndStatus(
+                            id, status, PageRequest.of(page - 1, 3, Sort.by("price").descending()));
+                }
+            default:
+                if (option.equals("up")) {
+                    return bookRepository.findAllByAuthor_IdAndStatus(
+                            id, status, PageRequest.of(page - 1, 3, Sort.by("title".toLowerCase())));
+                } else {
+                    return bookRepository.findAllByAuthor_IdAndStatus(
+                            id, status, PageRequest.of(page - 1, 3, Sort.by("title".toLowerCase()).descending()));
+                }
+        }
+    }
+
+    public List<Book> sortOptionsAfterSearch(Long id, String type, String option, String value, String category, String status, int page, String sort) {
+        switch (type) {
+            case PUBLISHER_SORT:
+                if (option.equals("up")) {
+                    return searchBooksFromAuthorWithSort(id,value,category,status,page,sort).getContent();
+                } else {
+                    return searchBooksFromAuthorWithSort(id,value,category,status,page,sort).get()
+                            .sorted(Comparator.reverseOrder())
                             .collect(Collectors.toList());
                 }
             case PRICE_SORT:
                 if (option.equals("up")) {
-                    return books.stream()
-                            .sorted(Comparator.comparing(Book::getPrice))
-                            .collect(Collectors.toList());
+                    return searchBooksFromAuthorWithSort(id,value,category,status,page,sort).getContent();
                 } else {
-                    return books.stream()
-                            .sorted(Comparator.comparing(Book::getPrice).reversed())
+                    return searchBooksFromAuthorWithSort(id,value,category,status,page,sort).get()
+                            .sorted(Comparator.reverseOrder())
                             .collect(Collectors.toList());
                 }
             default:
                 if (option.equals("up")) {
-                    return books.stream()
-                            .sorted(Comparator.naturalOrder())
-                            .collect(Collectors.toList());
+                    return searchBooksFromAuthorWithSort(id,value,category,status,page,sort).getContent();
                 } else {
-                    return books.stream()
+                    return searchBooksFromAuthorWithSort(id,value,category,status,page,sort).get()
                             .sorted(Comparator.reverseOrder())
                             .collect(Collectors.toList());
                 }
         }
-    }
-
-    public List<Book> filterAuthorBooksByStatus(String status, Long id) {
-        return getAllBooksFromAuthor(id).stream()
-                .filter(book -> book.getStatus().equals(status))
-                .collect(Collectors.toList());
     }
 }

@@ -11,10 +11,10 @@
     <div class="jumbotron panel-jumbo">
         <div class="text-center text-white jumbo-container">
             <h1 class="display-3" th:text="|Zamówienie ${order.id}|">Zamówienie 123</h1>
-            <th:block th:switch="${order.status}">
-                <h2 th:case="${T(com.bookstore.model.OrderStatus).NEW}">Status: Nowe</h2>
-                <h2 th:case="${T(com.bookstore.model.OrderStatus).IN_PROGRESS}">Status: W realizacji</h2>
-                <h2 th:case="${T(com.bookstore.model.OrderStatus).COMPLETE}">Status: Zrealizowane</h2>
+            <th:block th:switch="${order.orderStatus}">
+                <h2 th:case="${T(com.bookstore.util.OrderStatus).NEW}">Status: Nowe</h2>
+                <h2 th:case="${T(com.bookstore.util.OrderStatus).IN_PROGRESS}">Status: W realizacji</h2>
+                <h2 th:case="${T(com.bookstore.util.OrderStatus).COMPLETE}">Status: Zrealizowane</h2>
             </th:block>
             <a th:href="@{/panel/zamowienia}">Lista zamówień</a>
         </div>
@@ -40,12 +40,12 @@
             <div class="text-right">
                 <h5 th:text="|Do zapłaty: ${#numbers.formatDecimal(order.orderPrice,1,2,'COMMA')}zł|"></h5>
             </div>
-            <div class="text-center" th:if="${order.status != T(com.bookstore.model.OrderStatus).COMPLETE}">
+            <div class="text-center" th:if="${order.orderStatus != T(com.bookstore.util.OrderStatus).COMPLETE}">
                 <form action="#" th:action="@{|/panel/zamowienie/${order.id}|}" method="post">
                     <button class="btn btn-primary"
-                            th:if="${order.status == T(com.bookstore.model.OrderStatus).NEW}">Realizuj</button>
+                            th:if="${order.orderStatus == T(com.bookstore.util.OrderStatus).NEW}">Realizuj</button>
                     <button class="btn btn-success"
-                            th:if="${order.status == T(com.bookstore.model.OrderStatus).IN_PROGRESS}">Zakończ</button>
+                            th:if="${order.orderStatus == T(com.bookstore.util.OrderStatus).IN_PROGRESS}">Zakończ</button>
                 </form>
             </div>
         </div>

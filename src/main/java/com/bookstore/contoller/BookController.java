@@ -5,7 +5,9 @@ import com.bookstore.service.BookService;
 import com.bookstore.service.ClientService;
 import com.bookstore.util.ClientNotFoundException;
 import com.bookstore.util.Message;
+import com.bookstore.util.Type;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -13,12 +15,16 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
+
+import static com.bookstore.util.Type.*;
 
 @Controller
-@SessionAttributes({"books","status", "favorites", "favorites_isbn"})
+@SessionAttributes({"value", "category", "pageNumbers", "favorites", "favorites_isbn"})
 public class BookController {
 
-    private static final String STATUS_EMPTY = "empty";
+    private static final String DEFAULT_BOOK_STATUS = "default";
 
     private BookService bookService;
     private ClientService clientService;
@@ -30,11 +36,18 @@ public class BookController {
     }
 
     @GetMapping("/books")
-    public String getAllBooks(Model model) {
-        model.addAttribute("books", bookService.getAllBooks());
+    public String getAllBooks(@RequestParam int page, Model model) {
+        Page<Book> bookPage = bookService.getAllBooks(page);
+        int totalPages = bookPage.getTotalPages();
+        model.addAttribute("pageNumbers", clientService.pageCounter(totalPages));
+        model.addAttribute("current_page", page);
+        model.addAttribute("url", "/books");
+        model.addAttribute("entity_type", TYPE_DEFAULT);
+        model.addAttribute("status", DEFAULT_BOOK_STATUS);
+        model.addAttribute("sort_type", "default");
+        model.addAttribute("books", bookPage.getContent());
         model.addAttribute("favorites", clientService.getAllFavorites());
         model.addAttribute("favorites_isbn", clientService.getAllBookIsbnFromFavorites());
-        model.addAttribute("status", "empty");
         return "books";
     }
 
@@ -55,21 +68,54 @@ public class BookController {
     @GetMapping("/books/sort")
     public String sortBooks(@RequestParam(defaultValue = "default") String type,
                             @RequestParam String option,
-                            @SessionAttribute(name = "books", required = false) List<Book> books,
-                            Model model) {
-        if (books == null) {
-            return "redirect:/books";
+                            @RequestParam(defaultValue = "default") String status,
+                            @RequestParam(defaultValue = "false") Boolean search,
+                            @SessionAttribute(required = false) String value,
+                            @SessionAttribute(required = false) String category,
+                            @RequestParam(required = false) String sort_type,
+                            @RequestParam int page, Model model) {
+        if (search) {
+            List<Book> sortedBooks = bookService.sortOptionsAfterSearch(type, option, value, category, status, page, sort_type);
+            model.addAttribute("books", sortedBooks);
+            model.addAttribute("search", search);
+            model.addAttribute("sort_type", sort_type);
+            model.addAttribute("url", "/books/sort?type=" + type + "&option=" + option + "&search=" + search + "&sort_type=" + sort_type);
+        } else {
+            Page<Book> bookPage = bookService.sortBooks(type, option, status, page);
+            int totalPages = bookPage.getTotalPages();
+            model.addAttribute("pageNumbers", clientService.pageCounter(totalPages));
+            model.addAttribute("sort_type", "default");
+            model.addAttribute("books", bookPage.getContent());
+            model.addAttribute("url", "/books/sort?type=" + type + "&option=" + option);
         }
-        model.addAttribute("books", bookService.sortBooks(type, option, books));
-        model.addAttribute("status", STATUS_EMPTY);
+        model.addAttribute("current_page", page);
+        model.addAttribute("sort", true);
+        model.addAttribute("type", type);
+        model.addAttribute("option", option);
+        model.addAttribute("status", status);
+        model.addAttribute("favorites", clientService.getAllFavorites());
+        model.addAttribute("favorites_isbn", clientService.getAllBookIsbnFromFavorites());
         return "books";
     }
 
     @GetMapping("/books/search")
     public String searchBooks(@RequestParam String value,
                               @RequestParam(defaultValue = "default") String category,
-                              @RequestParam String status,
-                              Model model) {
+                              @RequestParam(required = false) String status,
+                              @RequestParam int page, Model model) {
+        Page<Book> bookPage = bookService.searchBooks(value, category, status, page);
+        int totalPages = bookPage.getTotalPages();
+        model.addAttribute("pageNumbers", clientService.pageCounter(totalPages));
+        model.addAttribute("current_page", page);
+        model.addAttribute("url", "/books/search?value=" + value + "&category=" + category + "&status=" + status);
+        model.addAttribute("search", true);
+        model.addAttribute("status", status);
+        model.addAttribute("sort_type", "default");
+        model.addAttribute("value", value);
+        model.addAttribute("category", category);
+        model.addAttribute("books", bookPage.getContent());
+        model.addAttribute("favorites", clientService.getAllFavorites());
+        model.addAttribute("favorites_isbn", clientService.getAllBookIsbnFromFavorites());
         if (value.isEmpty()) {
             model.addAttribute("message", new Message("Search", "wypełnij pole wyszukiwania"));
             return "books";
@@ -77,14 +123,22 @@ public class BookController {
             model.addAttribute("message", new Message("Search", "zaznacz kategorie wyszukiwania"));
             return "books";
         }
-        model.addAttribute("books", bookService.searchBooks(value, category, status));
         return "books";
     }
 
     @GetMapping("/books/filter/{status}")
-    public String filterBooks(@PathVariable String status, Model model) {
-        model.addAttribute("books", bookService.filterBooksByStatus(status));
+    public String filterBooks(@PathVariable String status, @RequestParam int page, Model model) {
+        Page<Book> bookPage = bookService.filterBooksByStatus(status, page);
+        int totalPages = bookPage.getTotalPages();
+        model.addAttribute("pageNumbers", clientService.pageCounter(totalPages));
+        model.addAttribute("current_page", page);
+        model.addAttribute("url", "/books/sort?status=" + status);
+        model.addAttribute("entity_type", TYPE_STATUS);
+        model.addAttribute("sort_type", "default");
         model.addAttribute("status", status);
+        model.addAttribute("books", bookPage.getContent());
+        model.addAttribute("favorites", clientService.getAllFavorites());
+        model.addAttribute("favorites_isbn", clientService.getAllBookIsbnFromFavorites());
         return "books";
     }
 

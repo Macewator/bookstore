@@ -15,7 +15,7 @@
 <div class="container-fluid bg-web">
     <div class="sidenav d-inline-block">
         <h6 class="text-white mt-4 ml-4">Spis</h6>
-        <a class="text-a" th:href="@{/books}">Książki</a>
+        <a class="text-a" th:href="@{/books(page=1)}">Książki</a>
         <a class="text-a" th:href="@{/authors}">Autorzy</a>
         <a class="text-a" th:href="@{/publishers}">Wydawcy</a>
     </div>
@@ -26,12 +26,11 @@
             </label>
             <input class="btn btn-sm btn-info" type="submit" value="szukaj">
         </form>
-
     </div>
     <div class="list-group col-5 offset-4 mt-4 shadow p-3 mb-5 d-inline-block">
         <a href="#" class="list-group-item list-group-item-action flex-column align-items-start"
            th:each="publisher: ${publishers}" th:object="${publisher}"
-           th:href="@{/publishers/books(entity_id=${publisher.id})}">
+           th:href="@{/publishers/books(entity_id=${publisher.id},page=1)}">
             <div class="d-flex w-100 justify-content-between">
                 <h6 class="mb-1 font-weight-bold" th:text="|Wydawca: *{publisherName}|">Nzwa wydawcy</h6>
                 <p th:text="*{wwwPage}">Storna wwww</p>

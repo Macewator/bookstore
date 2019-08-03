@@ -27,12 +27,12 @@ public class PanelController {
     }
 
     @GetMapping("panel/zamowienia")
-    public String getAllOrders(@RequestParam(required = false) OrderStatus status, Model model){
+    public String getAllOrders(@RequestParam(required = false) OrderStatus status, Model model) {
         List<Order> orders;
-        if (status == null){
+        if (status == null) {
             orders = orderRepository.findAll();
-        }else {
-            orders = orderRepository.findAllByStatus(status);
+        } else {
+            orders = orderRepository.findAllByOrderStatus(status);
         }
         model.addAttribute("orders", orders);
         return "panel";
@@ -49,7 +49,7 @@ public class PanelController {
     public String changeOrderStatus(@PathVariable Long id, Model model) {
         Optional<Order> order = orderRepository.findById(id);
         order.ifPresent(o -> {
-            o.setStatus(OrderStatus.nextStatus(o.getStatus()));
+            o.setOrderStatus(OrderStatus.nextStatus(o.getOrderStatus()));
             orderRepository.save(o);
         });
         return order.map(o -> singleOrderPanel(o, model))

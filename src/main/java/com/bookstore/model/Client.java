@@ -20,7 +20,7 @@ public class Client implements Serializable {
     private Long id;
 
     @NotBlank
-    @Column(name = "user_name", unique = true)
+    @Column(name = "client_user_name", unique = true)
     private String userName;
 
     @Password
@@ -58,14 +58,27 @@ public class Client implements Serializable {
     public Client() {
     }
 
-    public Client(@NotBlank String userName, @Password String password, @NotBlank String firstName,
+    public Client(Long id, @NotBlank String userName, @Password String password, @NotBlank String firstName,
                   @NotBlank String lastName, Information userInfo, Address address) {
+        this.id = id;
         this.userName = userName;
         this.password = password;
         this.firstName = firstName;
         this.lastName = lastName;
         this.userInfo = userInfo;
         this.address = address;
+    }
+
+    public static long getSerialVersionUID() {
+        return serialVersionUID;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getUserName() {
@@ -139,5 +152,4 @@ public class Client implements Serializable {
     public void setOrders(List<Order> orders) {
         this.orders = orders;
     }
-
 }

@@ -24,7 +24,7 @@ public class ClientOrder {
 
     public void prepareNewOrder() {
         order = new Order();
-        order.setStatus(OrderStatus.NEW);
+        order.setOrderStatus(OrderStatus.NEW);
     }
 
     public void clearCurrentOrder(){

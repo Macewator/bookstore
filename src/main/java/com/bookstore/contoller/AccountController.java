@@ -15,6 +15,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
 
@@ -67,13 +68,14 @@ public class AccountController {
     }
 
     @GetMapping("/account/delete")
-    public String deleteClientAccount(Authentication auth, Model model){
+    public String deleteClientAccount(Authentication auth, RedirectAttributes attr){
         String userName = auth.getName();
         try {
             orderService.checkClientOrdersStatus(userName);
         }catch (IllegalArgumentException e){
-            model.addAttribute("exception", e.getMessage());
-            return "account";
+            attr.addFlashAttribute("client_info", true);
+            attr.addFlashAttribute("exception", e.getMessage());
+            return "redirect:/client/account";
         }
         bookService.deleteClientComments(userName);
         bookService.deleteClientRating(userName);

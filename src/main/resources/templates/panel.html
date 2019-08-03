@@ -42,7 +42,7 @@
             <tr th:each="order: ${orders}" th:object="${order}">
                 <th scope="row" th:text="*{id}">1</th>
                 <td th:text="|*{orderAddress.street} *{orderAddress.city} *{orderAddress.zip}|">Kościuszki 23, 42-200 Częstochowa</td>
-                <th:block th:switch="*{status}">
+                <th:block th:switch="*{orderStatus}">
                     <td th:case="${T(com.bookstore.util.OrderStatus).NEW}">Nowe</td>
                     <td th:case="${T(com.bookstore.util.OrderStatus).IN_PROGRESS}">W realizacji</td>
                     <td th:case="${T(com.bookstore.util.OrderStatus).COMPLETE}">Zrealizowane</td>

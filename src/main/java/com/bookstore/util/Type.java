@@ -6,5 +6,6 @@ public enum Type {
     TYPE_PUBLISHER,
     TYPE_BOOK,
     TYPE_ACCOUNT,
-    TYPE_DEFAULT
+    TYPE_DEFAULT,
+    TYPE_STATUS
 }

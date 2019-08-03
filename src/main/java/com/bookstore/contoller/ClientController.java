@@ -7,6 +7,7 @@ import com.bookstore.service.CreditCardService;
 import com.bookstore.util.ClientNotFoundException;
 import com.bookstore.util.Message;
 import com.bookstore.service.OrderService;
+import com.bookstore.util.OrderStatus;
 import com.bookstore.util.Type;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -14,6 +15,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
 import java.util.NoSuchElementException;
@@ -125,25 +127,74 @@ public class ClientController {
         return "account";
     }
 
-    @GetMapping("/client/favorites/{action}")
-    public String manageClientFavorites(@PathVariable String action, @RequestParam Long isbn,
+    @GetMapping("/client/favorites/{process}")
+    public String manageClientFavorites(@PathVariable String process, @RequestParam Long isbn,
                                         @RequestParam(required = false) Type entity_type,
                                         @RequestParam(required = false) Long entity_id,
+                                        @RequestParam(required = false) String entity_url,
+                                        @RequestParam(required = false) String status,
+                                        @RequestParam(defaultValue = "0") int page,
                                         Authentication auth, Model model) {
-        if (action.equals(ACTION_ADD)) {
+        if (process.equals(ACTION_ADD)) {
             try {
                 clientService.addToFavorites(isbn, auth.getName());
             } catch (NoSuchElementException | ClientNotFoundException e) {
                 model.addAttribute("exception", e.getMessage());
             }
-            return clientService.redirectForEntityType(entity_type, isbn, entity_id);
-        } else if (action.equals(ACTION_REMOVE)) {
+            return clientService.redirectForEntityType(entity_type, isbn, entity_id, entity_url, status, page);
+        } else if (process.equals(ACTION_REMOVE)) {
             model.addAttribute("books", clientService.removeFromFavorites(isbn, auth.getName()));
             if (entity_type != Type.TYPE_ACCOUNT) {
-                return clientService.redirectForEntityType(entity_type, isbn, entity_id);
+                return clientService.redirectForEntityType(entity_type, isbn, entity_id, entity_url, status, page);
             }
             return "redirect:/client/favorites";
         }
         return "redirect:/";
+    }
+
+    @GetMapping("/client/favorites/{action}/{process}")
+    public String manageClientFavorites(@PathVariable String action,
+                                        @PathVariable String process,
+                                        @RequestParam Long isbn,
+                                        @RequestParam(defaultValue = "999") Long entity_id,
+                                        @RequestParam(required = false) String type,
+                                        @RequestParam(required = false) String option,
+                                        @RequestParam(required = false) String value,
+                                        @RequestParam(required = false) String category,
+                                        @RequestParam(required = false) String status,
+                                        @RequestParam(defaultValue = "false") Boolean search,
+                                        @RequestParam(required = false) String sort_type,
+                                        @RequestParam int page, RedirectAttributes attr,
+                                        Authentication auth) {
+        if (process.equals(ACTION_ADD)) {
+            try {
+                clientService.addToFavorites(isbn, auth.getName());
+            } catch (NoSuchElementException | ClientNotFoundException e) {
+                attr.addFlashAttribute("exception", e.getMessage());
+            }
+            return clientService.redirectForAction(action, entity_id, type, option, value, category, status, search, sort_type, page);
+        } else if (process.equals(ACTION_REMOVE)) {
+            clientService.removeFromFavorites(isbn, auth.getName());
+            return clientService.redirectForAction(action, entity_id, type, option, value, category, status, search, sort_type, page);
+        }
+        return "redirect:/";
+    }
+
+    @GetMapping("/client/history/delete")
+    public String manageClientHistory(@RequestParam OrderStatus status, Authentication auth) {
+        orderService.deleteClientCompletedOrders(status, auth.getName());
+        return "redirect:/client/history";
+    }
+
+    @GetMapping("client/history/filter")
+    public String getAllOrders(@RequestParam(required = false) OrderStatus status,
+                               Authentication auth, Model model) {
+        if (status == null) {
+            model.addAttribute("history", orderService.getOrderHistory(auth.getName()));
+        } else {
+            model.addAttribute("history", orderService.findAllByStatus(status));
+        }
+        model.addAttribute("client_history", true);
+        return "account";
     }
 }

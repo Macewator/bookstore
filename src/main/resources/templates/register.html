@@ -19,65 +19,57 @@
             <div class="form-row">
                 <div class="col-md-4 mb-4">
                     <label for="validationUserName">Nazwa użytkownika</label>
-                    <input th:field="*{userName}" type="text" class="form-control" id="validationUserName"
-                           placeholder="User name" required>
+                    <input th:field="*{userName}" type="text" class="form-control" id="validationUserName" required>
                     <p th:errors="*{userName}">invalid user name</p>
                 </div>
                 <div class="col-md-4 mb-4">
                     <label for="validationFirstName">Imię</label>
-                    <input th:field="*{firstName}" type="text" class="form-control" id="validationFirstName"
-                           placeholder="First name" required>
+                    <input th:field="*{firstName}" type="text" class="form-control" id="validationFirstName" required>
                     <p th:errors="*{firstName}">invalid first name</p>
                 </div>
                 <div class="col-md-4 mb-4">
                     <label for="validationLastName">Nazwisko</label>
-                    <input th:field="*{lastName}" type="text" class="form-control" id="validationLastName"
-                           placeholder="Last name" required>
+                    <input th:field="*{lastName}" type="text" class="form-control" id="validationLastName" required>
                     <p th:errors="*{lastName}">invalid last name</p>
                 </div>
             </div>
             <div class="form-row">
                 <div class="col-md-4 mb-4">
                     <label for="validationPassword">Hasło</label>
-                    <input th:field="*{password}" type="password" class="form-control" id="validationPassword"
-                           placeholder="Password" required>
+                    <input th:field="*{password}" type="password" class="form-control" id="validationPassword" required>
                     <p th:errors="*{password}">invalid password</p>
                 </div>
                 <div class="col-md-4 mb-4">
                     <label for="validationEmail">Email</label>
-                    <input th:field="*{userInfo.email}" type="email" class="form-control" id="validationEmail"
-                           placeholder="Email" required>
+                    <input th:field="*{userInfo.email}" type="email" class="form-control" id="validationEmail" required>
                     <p th:errors="*{userInfo.email}">invalid email</p>
                 </div>
                 <div class="col-md-4 mb-4">
                     <label for="validationTelephone">Telefon</label>
                     <input th:field="*{userInfo.telephone}" type="text" class="form-control"
-                           id="validationTelephone"
-                           placeholder="Telephone" maxlength="11" required>
+                           id="validationTelephone" maxlength="11" required>
                     <p th:errors="*{userInfo.telephone}">invalid telephone</p>
                 </div>
             </div>
             <div class="form-row">
                 <div class="col-md-4 mb-4">
                     <label for="validationCity">Miasto</label>
-                    <input th:field="*{address.city}" type="text" class="form-control" id="validationCity"
-                           placeholder="City" required>
+                    <input th:field="*{address.city}" type="text" class="form-control" id="validationCity" required>
                     <p th:errors="*{address.city}">invalid city</p>
                 </div>
                 <div class="col-md-4 mb-4">
                     <label for="validationStreet">Ulica</label>
-                    <input th:field="*{address.street}" type="text" class="form-control" id="validationStreet"
-                           placeholder="Street" required>
+                    <input th:field="*{address.street}" type="text" class="form-control" id="validationStreet" required>
                     <p th:errors="*{address.street}">invalid street</p>
                 </div>
                 <div class="col-md-4 mb-4">
                     <label for="validationZip">Kod pocztowy</label>
                     <input th:field="*{address.zip}" type="text" class="form-control" id="validationZip"
-                           placeholder="Zip" maxlength="6" required>
+                           placeholder="00-000" maxlength="6" required>
                     <p th:errors="*{address.zip}">invalid zip</p>
                 </div>
             </div>
-            <div class="text-center">
+            <div class="text-center mt-2">
                 <button class="btn btn-primary btn-sm" type="submit">Rejestruj</button>
             </div>
         </form>

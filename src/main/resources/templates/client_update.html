@@ -17,40 +17,36 @@
             <div class="form-row">
                 <div class="col-md-4 mb-4">
                     <label for="editUserName">Nazwa Użytkonika</label>
-                    <input th:field="*{userName}" type="text" class="form-control" id="editUserName"
-                           placeholder="Email" required>
+                    <input th:field="*{userName}" type="text" class="form-control" id="editUserName" required>
                     <p th:errors="*{userName}">invalid username</p>
                 </div>
                 <div class="col-md-4 mb-4">
                     <label for="editEmail">Email</label>
-                    <input th:field="*{userInfo.email}" type="email" class="form-control" id="editEmail"
-                           placeholder="Email" required>
+                    <input th:field="*{userInfo.email}" type="email" class="form-control" id="editEmail" required>
                     <p th:errors="*{userInfo.email}">invalid email</p>
                 </div>
                 <div class="col-md-4 mb-4">
                     <label for="editTelephone">Telefon</label>
-                    <input th:field="*{userInfo.telephone}" type="text" class="form-control"
-                           id="editTelephone" placeholder="Telephone" required>
+                    <input th:field="*{userInfo.telephone}" type="text" class="form-control" id="editTelephone"
+                           maxlength="11" required>
                     <p th:errors="*{userInfo.telephone}">invalid telephone</p>
                 </div>
             </div>
             <div class="form-row">
                 <div class="col-md-4 mb-4">
                     <label for="editCity">Miasto</label>
-                    <input th:field="*{address.city}" type="text" class="form-control" id="editCity"
-                           placeholder="City" required>
+                    <input th:field="*{address.city}" type="text" class="form-control" id="editCity" required>
                     <p th:errors="*{address.city}">invalid city</p>
                 </div>
                 <div class="col-md-4 mb-4">
                     <label for="editStreet">Ulica</label>
-                    <input th:field="*{address.street}" type="text" class="form-control" id="editStreet"
-                           placeholder="Street" required>
+                    <input th:field="*{address.street}" type="text" class="form-control" id="editStreet" required>
                     <p th:errors="*{address.street}">invalid street</p>
                 </div>
                 <div class="col-md-4 mb-4">
                     <label for="editZip">Kod pocztowy</label>
                     <input th:field="*{address.zip}" type="text" class="form-control" id="editZip"
-                           placeholder="Zip" required>
+                           placeholder="00-000" maxlength="6" required>
                     <p th:errors="*{address.zip}">invalid zip</p>
                 </div>
             </div>

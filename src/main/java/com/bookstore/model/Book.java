@@ -1,6 +1,8 @@
 package com.bookstore.model;
 
 import javax.persistence.*;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "book")
@@ -31,6 +33,9 @@ public class Book implements Comparable<Book> {
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "publisher_id")
     private Publisher publisher;
+
+    @ManyToMany(mappedBy = "books")
+    private Set<Order> orders = new HashSet<>();
 
     public Book() {
     }
@@ -108,8 +113,17 @@ public class Book implements Comparable<Book> {
         this.publisher = publisher;
     }
 
+    public Set<Order> getOrders() {
+        return orders;
+    }
+
+    public void setOrders(Set<Order> orders) {
+        this.orders = orders;
+    }
+
     @Override
     public int compareTo(Book o) {
         return this.getTitle().compareToIgnoreCase(o.getTitle());
     }
+
 }

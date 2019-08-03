@@ -12,6 +12,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @Service
@@ -28,10 +29,13 @@ public class OrderService {
         this.clientOrder = clientOrder;
     }
 
-    public Book addBookToOrder(Long isbn) {
+    public void addBookToOrder(Long isbn) {
         Optional<Book> book = bookRepository.findById(isbn);
-        book.ifPresent(clientOrder::add);
-        return book.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Book not found"));
+        if(book.isPresent()){
+            clientOrder.add(book.get());
+        }else {
+            throw new NoSuchElementException("książka nie istnieje");
+        }
     }
 
     public Order getOrder() {
@@ -73,16 +77,24 @@ public class OrderService {
         clientOrder.clearCurrentOrder();
     }
 
-    public void checkClientOrdersStatus(String userName){
+    public void deleteClientCompletedOrders(OrderStatus status, String userName){
+        orderRepository.deleteAllByOrderStatusAndClientUserName(status.toString(), userName);
+    }
+
+    public List<Order> findAllByStatus(OrderStatus orderStatus){
+        return orderRepository.findAllByOrderStatus(orderStatus);
+    }
+
+    public void checkClientOrdersStatus(String userName) {
         List<Order> orders = orderRepository.findAllByClient_UserName(userName);
-        for (Order o: orders) {
-            if(checkOrderStatus(o)){
+        for (Order o : orders) {
+            if (checkOrderStatus(o)) {
                 throw new IllegalArgumentException("nie możesz usnąć konta, posiadasz nie zakończone zamóweinia");
             }
         }
     }
 
-    private boolean checkOrderStatus(Order order){
-        return order.getStatus().equals(OrderStatus.NEW) || order.getStatus().equals(OrderStatus.IN_PROGRESS);
+    private boolean checkOrderStatus(Order order) {
+        return order.getOrderStatus().equals(OrderStatus.NEW) || order.getOrderStatus().equals(OrderStatus.IN_PROGRESS);
     }
 }

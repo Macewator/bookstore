@@ -164,6 +164,20 @@
         </div>
     </div>
     <div class="col-8 offset-3 mt-3" th:if="${client_history}">
+        <div class="row">
+            <div class="col-12">
+                <div class="text-center mb-2">
+                    <a th:href="@{/client/history/filter(status=${T(com.bookstore.util.OrderStatus).NEW.name()})}"
+                       class="btn btn-sm btn-warning mx-1">Nowe</a>
+                    <a th:href="@{/client/history/filter(status=${T(com.bookstore.util.OrderStatus).IN_PROGRESS.name()})}"
+                       class="btn btn-sm btn-primary mx-1">W realizacji</a>
+                    <a th:href="@{/client/history/filter(status=${T(com.bookstore.util.OrderStatus).COMPLETE.name()})}"
+                       class="btn btn-sm btn-success mx-1">Zrealizowane</a>
+                    <a th:href="@{/client/history/delete(status=${T(com.bookstore.util.OrderStatus).COMPLETE.name()})}"
+                       class="btn btn-sm btn-danger">Usuń zakończone</a>
+                </div>
+            </div>
+        </div>
         <div class="card">
             <div class="card-body">
                 <h5 class="text-center font-weight-bold">Historia</h5>
@@ -171,7 +185,7 @@
                     <div class="col-3">
                         <label class="font-weight-bold" th:text="|Zamowienie nr: *{id}|"></label>
                         <p class="font-weight-normal" th:text="|Koszt: *{orderPrice}zł|"></p>
-                        <p class="font-weight-normal" th:text="|Status: *{status.name()}|"></p>
+                        <p class="font-weight-normal" th:text="|Status: *{orderStatus.name()}|"></p>
                     </div>
                     <div class="col-9">
                         <ul th:each="book: ${order.books}" th:object="${book}">
