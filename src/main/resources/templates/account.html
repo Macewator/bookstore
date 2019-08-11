@@ -160,7 +160,7 @@
         </div>
         <div class="text-center mt-2" th:if="${#lists.isEmpty(order.books)}">
             <h4>Twoje zamówienie jest puste</h4>
-            <a th:href="@{/books}">Dodaj coś do zamówienia</a>
+            <a th:href="@{/books(page=1)}">Dodaj coś do zamówienia</a>
         </div>
     </div>
     <div class="col-8 offset-3 mt-3" th:if="${client_history}">
@@ -242,7 +242,7 @@
     <div th:if="${favorites}">
         <div class="text-center mt-3" th:if="${#lists.isEmpty(books)}">
             <h5>lista ulubionych jest pusta</h5>
-            <a th:href="@{/books}">zobacz naszą oferte</a>
+            <a th:href="@{/books(page=1)}">zobacz naszą oferte</a>
         </div>
         <div class="list-group col-6 offset-3 mt-4 shadow p-3 mb-5 d-inline-block">
             <h5 class="text-center font-weight-bold mb-1">Ulubione</h5>

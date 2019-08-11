@@ -20,7 +20,7 @@ import static com.bookstore.util.Action.*;
 @Service
 public class ClientService {
 
-    private static final String DEFAULT_ROLE = "ROLE_ADMIN";
+    private static final String DEFAULT_ROLE = "ROLE_CLIENT";
 
     private ClientRepository clientRepository;
     private ClientRoleRepository roleRepository;

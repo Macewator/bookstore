@@ -33,7 +33,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                         "/authors/books/search", "/authors/books/sort", "/authors/books/{status}").permitAll()
                 .antMatchers("/publishers", "/publishers/books", "/publishers/search",
                         "/publishers/books/search", "/publishers/books/sort", "/publishers/books/{status}").permitAll()
-                /*.mvcMatchers("/panel/zamowienia").hasRole("ROLE_ADMIN")*/
                 .anyRequest().authenticated()
                 .and().formLogin()
                 .loginPage("/loginform").permitAll()

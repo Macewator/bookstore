@@ -46,7 +46,7 @@ public class AccountController {
     }
 
     @PostMapping("/account/update")
-    public String updateClientData(@ModelAttribute @Valid ClientUpdateData clientUpdData,
+    public String updateClientData(@ModelAttribute("client_upd") @Valid ClientUpdateData clientUpdData,
                                    BindingResult bindingResult,
                                    @SessionAttribute(name = "user_name") String userName,
                                    Model model) {

@@ -65,12 +65,17 @@ public class ClientController {
                 return "register";
             }
         }
+        return "redirect:/register/payment";
+    }
+
+    @GetMapping("/register/payment")
+    public String paymentForm(Model model) {
         model.addAttribute("card", new CreditCard());
         return "payment";
     }
 
     @PostMapping("/register/payment")
-    public String registerPayment(@ModelAttribute @Valid CreditCard card,
+    public String registerPayment(@ModelAttribute("card") @Valid CreditCard card,
                                   BindingResult cardBindingResult,
                                   @SessionAttribute(name = "client") Client client,
                                   Model model) {

@@ -36,7 +36,7 @@
                         Szczegóły</p>
                     <div class="row">
                         <a class="btn btn-sm btn-primary mr-1"
-                           th:href="@{/order/add(isbn=*{isbn},entity_type=${T(com.bookstore.util.Type).TYPE_BOOK})}">
+                           th:href="@{/order/add(isbn=*{isbn},entity_type=${T(com.bookstore.util.Type).TYPE_BOOK},page=1)}">
                             Dodaj do zamówienia
                         </a>
                         <a class="btn btn-sm btn-success mr-1" sec:authorize="isAnonymous()"

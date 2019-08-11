@@ -20,7 +20,7 @@
                     <input th:field="*{ownerName}" type="text" class="form-control"
                            id="validationName"
                            placeholder="właściciel" required>
-                    <p th:errors="${card.ownerName}"></p>
+                    <p th:errors="*{ownerName}"></p>
                 </div>
             </div>
             <div class="form-row">
@@ -28,7 +28,7 @@
                     <label for="validationNumber">Numer karty</label>
                     <input th:field="*{creditCardNumber}" type="text" class="form-control" id="validationNumber"
                            placeholder="numer karty" maxlength="16" required>
-                    <p th:errors="${card.creditCardNumber}"></p>
+                    <p th:errors="*{creditCardNumber}"></p>
                 </div>
             </div>
             <div class="form-row">
@@ -37,7 +37,7 @@
                     <input th:field="*{expireDate}" type="text" class="form-control"
                            id="validationExpDate"
                            placeholder="MM-YYYY" maxlength="7" required>
-                    <p th:errors="${card.expireDate}"></p>
+                    <p th:errors="*{expireDate}"></p>
                 </div>
                 <div class="col-md-4 mb-4">
                     <label for="validationCvv">Numer cvv</label>
