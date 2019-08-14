@@ -15,6 +15,7 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 import static com.bookstore.util.Action.*;
+import static com.bookstore.util.Type.*;
 
 @Service
 public class ClientService {
@@ -212,22 +213,29 @@ public class ClientService {
     }
 
     public String redirectForEntityType(Type entityType, Long isbn, Long entity_id, String entity_url, String status, Integer page) {
-        switch (entityType) {
-            case TYPE_BOOK:
-                return "redirect:/books/details?isbn=" + isbn;
-            case TYPE_AUTHOR:
-                return "redirect:/authors/books?entity_id=" + entity_id + "&page=" + page;
-            case TYPE_PUBLISHER:
-                return "redirect:/publishers/books?entity_id=" + entity_id + "&page=" + page;
-            case TYPE_STATUS:
-                if (entity_id != null) {
-                    return "redirect:/" + entity_url + "/books/" + status + "?page=" + page;
-                } else {
-                    return "redirect:/books/filter/" + status + "?page=" + page;
-                }
-            default:
-                return "redirect:/books?page=" + page;
+        String baseUrl = "/books";
+        UriBuilder baseBuilder = new UriBuilder(baseUrl);
+
+        String extendUrl = entity_id != null ? "/" + entity_url + baseUrl : baseUrl + "/details";
+        UriBuilder extendBuilder = new UriBuilder(extendUrl);
+
+        String redirectUrl;
+
+        if(entityType == TYPE_BOOK){
+            redirectUrl = extendBuilder.param("isbn", isbn).build();
+        }else if(entityType == TYPE_AUTHOR || entityType == TYPE_PUBLISHER){
+            redirectUrl = extendBuilder.param("entity_id", entity_id).param("page", page).build();
+        }else if(entityType == TYPE_STATUS){
+            if (entity_id != null) {
+                redirectUrl = extendBuilder.param("status", status).param("page", page).build();
+            } else {
+                redirectUrl = baseBuilder.param("status", status).param("page", page).build();
+            }
+        }else {
+            redirectUrl = baseBuilder.param("page", page).build();
         }
+
+        return "redirect:" + redirectUrl;
     }
 
     public String redirectForAction(

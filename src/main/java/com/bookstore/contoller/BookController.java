@@ -135,7 +135,7 @@ public class BookController {
         return "books";
     }
 
-    @GetMapping("/books/filter/{status}")
+    @GetMapping("/books/{status}")
     public String filterBooks(@PathVariable String status, @RequestParam int page,
                               Authentication auth, Model model) {
         Page<Book> bookPage = bookService.filterBooksByStatus(status, page);

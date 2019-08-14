@@ -19,11 +19,11 @@
         <a class="text-a" th:href="@{/authors}">Autorzy</a>
         <a class="text-a" th:href="@{/publishers}">Wydawcy</a>
         <h6 class="text-white mt-4 ml-4">Filtry</h6>
-        <a class="text-a" th:href="@{/books/filter/new(page=1)}">Nowości</a>
-        <a class="text-a" th:href="@{/books/filter/best(page=1)}">Bestsellery</a>
+        <a class="text-a" th:href="@{/books/new(page=1)}">Nowości</a>
+        <a class="text-a" th:href="@{/books/best(page=1)}">Bestsellery</a>
         <a class="text-a" th:href="@{/books(page=1)}">Pełna oferta</a>
 
-        <th:block th:insert="fragments/books_sort_links.html :: sort_links"></th:block>
+        <th:block th:include="fragments/books_sort_links.html :: sort_links"></th:block>
 
     </div>
     <div class="row">
