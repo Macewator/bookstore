@@ -6,6 +6,7 @@ import com.bookstore.service.ClientService;
 import com.bookstore.util.Message;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -16,10 +17,10 @@ import static com.bookstore.util.Type.*;
 
 @Controller
 @SessionAttributes({"pageNumbers", "value", "category", "entity_url",
-        "entity_id", "entity_type", "form_option", "favorites", "favorites_isbn"})
+        "entity_id", "entity_type"})
 public class AuthorController {
 
-    private static final String DEFAULT_BOOK_STATUS = "default";
+    private static final String DEFAULT_VALUE = "default";
 
     private AuthorService authorService;
     private ClientService clientService;
@@ -37,7 +38,8 @@ public class AuthorController {
     }
 
     @GetMapping("authors/books")
-    public String getAllBooksFromAuthor(@RequestParam Long entity_id, @RequestParam int page, Model model) {
+    public String getAllBooksFromAuthor(@RequestParam Long entity_id, @RequestParam int page,
+                                        Authentication auth, Model model) {
         Page<Book> bookPage = authorService.getAllBooksFromAuthor(entity_id, page);
         int totalPages = bookPage.getTotalPages();
         model.addAttribute("pageNumbers", clientService.pageCounter(totalPages));
@@ -45,12 +47,13 @@ public class AuthorController {
         model.addAttribute("entity_url", "authors");
         model.addAttribute("entity_id", entity_id);
         model.addAttribute("entity_type", TYPE_AUTHOR);
-        model.addAttribute("status", DEFAULT_BOOK_STATUS);
-        model.addAttribute("form_option", TYPE_AUTHOR);
-        model.addAttribute("sort_type", "default");
+        model.addAttribute("status", DEFAULT_VALUE);
+        model.addAttribute("sort_type", DEFAULT_VALUE);
         model.addAttribute("books", bookPage.getContent());
-        model.addAttribute("favorites", clientService.getAllFavorites());
-        model.addAttribute("favorites_isbn", clientService.getAllBookIsbnFromFavorites());
+        if (auth != null) {
+            model.addAttribute("favorites", clientService.getAllFavorites());
+            model.addAttribute("favorites_isbn", clientService.getAllBookIsbnFromFavorites(auth.getName()));
+        }
         return "books_list";
     }
 
@@ -63,9 +66,9 @@ public class AuthorController {
     @GetMapping("/authors/books/search")
     public String searchBooksFromAuthor(@RequestParam Long entity_id,
                                         @RequestParam String value,
-                                        @RequestParam(defaultValue = "default") String category,
+                                        @RequestParam(defaultValue = DEFAULT_VALUE) String category,
                                         @RequestParam(required = false) String status,
-                                        @RequestParam int page, Model model) {
+                                        @RequestParam int page, Authentication auth, Model model) {
         Page<Book> bookPage = authorService.searchBooksFromAuthor(entity_id, value, category, status, page);
         int totalPages = bookPage.getTotalPages();
         model.addAttribute("pageNumbers", clientService.pageCounter(totalPages));
@@ -77,8 +80,10 @@ public class AuthorController {
         model.addAttribute("value", value);
         model.addAttribute("category", category);
         model.addAttribute("books", bookPage.getContent());
-        model.addAttribute("favorites", clientService.getAllFavorites());
-        model.addAttribute("favorites_isbn", clientService.getAllBookIsbnFromFavorites());
+        if (auth != null) {
+            model.addAttribute("favorites", clientService.getAllFavorites());
+            model.addAttribute("favorites_isbn", clientService.getAllBookIsbnFromFavorites(auth.getName()));
+        }
         if (value.isEmpty()) {
             model.addAttribute("message", new Message("Search", "wypełnij pole wyszukiwania"));
             return "books_list";
@@ -91,14 +96,14 @@ public class AuthorController {
 
     @GetMapping("/authors/books/sort")
     public String sortAuthorBooks(@SessionAttribute Long entity_id,
-                                  @RequestParam(defaultValue = "default") String type,
+                                  @RequestParam(defaultValue = DEFAULT_VALUE) String type,
                                   @RequestParam String option,
-                                  @RequestParam(defaultValue = "default") String status,
+                                  @RequestParam(defaultValue = DEFAULT_VALUE) String status,
                                   @RequestParam(defaultValue = "false") Boolean search,
                                   @SessionAttribute(required = false) String value,
                                   @SessionAttribute(required = false) String category,
                                   @RequestParam(required = false) String sort_type,
-                                  @RequestParam int page, Model model) {
+                                  @RequestParam int page, Authentication auth, Model model) {
         if (search) {
             List<Book> sortedBooks = authorService.sortOptionsAfterSearch(entity_id, type, option, value, category, status, page, sort_type);
             model.addAttribute("books", sortedBooks);
@@ -109,7 +114,7 @@ public class AuthorController {
             Page<Book> bookPage = authorService.sortAuthorBooks(entity_id, type, option, status, page);
             int totalPages = bookPage.getTotalPages();
             model.addAttribute("pageNumbers", clientService.pageCounter(totalPages));
-            model.addAttribute("sort_type", "default");
+            model.addAttribute("sort_type", DEFAULT_VALUE);
             model.addAttribute("books", bookPage.getContent());
             model.addAttribute("url", "/authors/books/sort?type=" + type + "&option=" + option);
         }
@@ -118,15 +123,17 @@ public class AuthorController {
         model.addAttribute("type", type);
         model.addAttribute("option", option);
         model.addAttribute("status", status);
-        model.addAttribute("favorites", clientService.getAllFavorites());
-        model.addAttribute("favorites_isbn", clientService.getAllBookIsbnFromFavorites());
+        if (auth != null) {
+            model.addAttribute("favorites", clientService.getAllFavorites());
+            model.addAttribute("favorites_isbn", clientService.getAllBookIsbnFromFavorites(auth.getName()));
+        }
         return "books_list";
     }
 
     @GetMapping("/authors/books/{status}")
     public String filterPublisherBooks(@PathVariable String status,
                                        @SessionAttribute(name = "entity_id", required = false) Long id,
-                                       @RequestParam int page, Model model) {
+                                       @RequestParam int page, Authentication auth, Model model) {
         if (id == null) {
             return "redirect:/authors";
         }
@@ -136,11 +143,13 @@ public class AuthorController {
         model.addAttribute("current_page", page);
         model.addAttribute("url", "/authors/books/sort?status=" + status);
         model.addAttribute("entity_type", TYPE_STATUS);
-        model.addAttribute("sort_type", "default");
+        model.addAttribute("sort_type", DEFAULT_VALUE);
         model.addAttribute("status", status);
         model.addAttribute("books", bookPage.getContent());
-        model.addAttribute("favorites", clientService.getAllFavorites());
-        model.addAttribute("favorites_isbn", clientService.getAllBookIsbnFromFavorites());
+        if (auth != null) {
+            model.addAttribute("favorites", clientService.getAllFavorites());
+            model.addAttribute("favorites_isbn", clientService.getAllBookIsbnFromFavorites(auth.getName()));
+        }
         return "books_list";
     }
 }

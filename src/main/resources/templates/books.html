@@ -22,43 +22,9 @@
         <a class="text-a" th:href="@{/books/filter/new(page=1)}">Nowości</a>
         <a class="text-a" th:href="@{/books/filter/best(page=1)}">Bestsellery</a>
         <a class="text-a" th:href="@{/books(page=1)}">Pełna oferta</a>
-        <h6 class="text-white mt-4 ml-4">Sortowanie</h6>
-        <p> Tytuł</p>
-        <a class="icon-a"
-           th:href="@{/books/sort(option='up',status=${status},search=${search},value=${value},category=${category},sort_type='title',page=${current_page})}">
-            <i class="fa fa-chevron-circle-up" aria-hidden="true"></i>
-        </a>
-        <a class="icon-a"
-           th:href="@{/books/sort(option='down',status=${status},search=${search},value=${value},category=${category},sort_type='title',page=${current_page})}">
-            <i class="fa fa-chevron-circle-down" aria-hidden="true"></i>
-        </a>
-        <p>Autor</p>
-        <a class="icon-a"
-           th:href="@{/books/sort(type='author',option='up',status=${status},search=${search},value=${value},category=${category},sort_type='author',page=${current_page})}">
-            <i class="fa fa-chevron-circle-up" aria-hidden="true"></i>
-        </a>
-        <a class="icon-a"
-           th:href="@{/books/sort(type='author',option='down',status=${status},search=${search},value=${value},category=${category},sort_type='author',page=${current_page})}">
-            <i class="fa fa-chevron-circle-down" aria-hidden="true"></i>
-        </a>
-        <p>Wydawca</p>
-        <a class="icon-a"
-           th:href="@{/books/sort(type='publisher',option='up',status=${status},search=${search},value=${value},category=${category},sort_type='author',page=${current_page})}">
-            <i class="fa fa-chevron-circle-up" aria-hidden="true"></i>
-        </a>
-        <a class="icon-a"
-           th:href="@{/books/sort(type='publisher',option='down',status=${status},search=${search},value=${value},category=${category},sort_type='author',page=${current_page})}">
-            <i class="fa fa-chevron-circle-down" aria-hidden="true"></i>
-        </a>
-        <p>Cena</p>
-        <a class="icon-a"
-           th:href="@{/books/sort(type='price',option='up',status=${status},search=${search},value=${value},category=${category},sort_type='author',page=${current_page})}">
-            <i class="fa fa-chevron-circle-up" aria-hidden="true"></i>
-        </a>
-        <a class="icon-a"
-           th:href="@{/books/sort(type='price',option='down',status=${status},search=${search},value=${value},category=${category},sort_type='author',page=${current_page})}">
-            <i class="fa fa-chevron-circle-down" aria-hidden="true"></i>
-        </a>
+
+        <th:block th:insert="fragments/books_sort_links.html :: sort_links"></th:block>
+
     </div>
     <div class="row">
         <form class="col-4 offset-5 mt-3" action="#" th:action="@{/books/search}" method="get">
@@ -98,87 +64,9 @@
             </div>
             <p class="mb-1" th:text="|Wydawca: *{publisher.publisherName}, (cena: *{price} zł)|"></p>
 
-            <a class="btn btn-sm btn-info mb-1" style="width: 436px" th:if="${sort != null && !sort_type.equals('default')}"
-               th:href="@{/order/sort/add(isbn=*{isbn},type=${type},option=${option},status=${status},search=${search},sort_type=${sort_type},page=${current_page})}">
-                zamów
-            </a>
-            <a class="btn btn-sm btn-info mb-1" style="width: 436px" th:if="${sort != null && sort_type.equals('default')}"
-               th:href="@{/order/sort/add(isbn=*{isbn},type=${type},option=${option},status=${status},page=${current_page})}">
-                zamów
-            </a>
-            <a class="btn btn-sm btn-info mb-1" style="width: 436px" th:if="${search != null && sort_type.equals('default')}"
-               th:href="@{/order/search/add(isbn=*{isbn},value=${value},category=${category},status=${status},page=${current_page})}">
-                zamów
-            </a>
-            <a class="btn btn-sm btn-info mb-1" style="width: 436px" th:if="${sort == null && search == null}"
-               th:href="@{/order/add(isbn=*{isbn},entity_type=${entity_type},status=${status},page=${current_page})}">
-                zamów
-            </a>
+            <th:block th:insert="fragments/books_order_links.html :: order_links"></th:block>
 
-            <a class="btn btn-sm btn-success mb-1 w-25 d-inline-block"
-               th:if="${!favorites_isbn.contains(book.isbn) && !favorites_isbn.isEmpty() && sort == null && search == null}"
-               th:href="@{/client/favorites/add(isbn=*{isbn},entity_type=${entity_type},status=${status},page=${current_page})}">
-                ulubione +
-            </a>
-            <a class="btn btn-sm btn-success mb-1 w-25 d-inline-block"
-               th:if="${favorites_isbn.isEmpty() && sort == null && search == null}"
-               th:href="@{/client/favorites/add(isbn=*{isbn},entity_type=${entity_type},status=${status},page=${current_page})}">
-                ulubione +
-            </a>
-
-            <a class="btn btn-sm btn-success mb-1 w-25 d-inline-block"
-               th:if="${!favorites_isbn.contains(book.isbn) && !favorites_isbn.isEmpty() && sort != null && !sort_type.equals('default')}"
-               th:href="@{/client/favorites/sort/add(isbn=*{isbn},type=${type},option=${option},status=${status},search=${search},sort_type=${sort_type},page=${current_page})}">
-                ulubione +
-            </a>
-            <a class="btn btn-sm btn-success mb-1 w-25 d-inline-block"
-               th:if="${favorites_isbn.isEmpty() && sort != null && !sort_type.equals('default')}"
-               th:href="@{/client/favorites/sort/add(isbn=*{isbn},type=${type},option=${option},status=${status},search=${search},sort_type=${sort_type},page=${current_page})}">
-                ulubione +
-            </a>
-
-            <a class="btn btn-sm btn-success mb-1 w-25 d-inline-block"
-               th:if="${!favorites_isbn.contains(book.isbn) && !favorites_isbn.isEmpty() && sort != null && sort_type.equals('default')}"
-               th:href="@{/client/favorites/sort/add(isbn=*{isbn},type=${type},option=${option},status=${status},page=${current_page})}">
-                ulubione +
-            </a>
-            <a class="btn btn-sm btn-success mb-1 w-25 d-inline-block"
-               th:if="${favorites_isbn.isEmpty() && sort != null && sort_type.equals('default')}"
-               th:href="@{/client/favorites/sort/add(isbn=*{isbn},type=${type},option=${option},status=${status},page=${current_page})}">
-                ulubione +
-            </a>
-
-            <a class="btn btn-sm btn-success mb-1 w-25 d-inline-block"
-               th:if="${!favorites_isbn.contains(book.isbn) && !favorites_isbn.isEmpty() && search != null && sort_type.equals('default')}"
-               th:href="@{/client/favorites/search/add(isbn=*{isbn},value=${value},category=${category},status=${status},page=${current_page})}">
-                ulubione +
-            </a>
-            <a class="btn btn-sm btn-success mb-1 w-25 d-inline-block"
-               th:if="${favorites_isbn.isEmpty() && search != null && sort_type.equals('default')}"
-               th:href="@{/client/favorites/search/add(isbn=*{isbn},value=${value},category=${category},status=${status},page=${current_page})}">
-                ulubione +
-            </a>
-
-            <a class="btn btn-sm btn-warning mb-1 w-25 d-inline-block" th:each="favorite: ${favorites}"
-               th:if="${book.isbn == favorite.book.isbn && #authentication.name.equals(favorite.client.userName) && sort != null && !sort_type.equals('default')}"
-               th:href="@{/client/favorites/sort/remove(isbn=*{isbn},type=${type},option=${option},status=${status},search=${search},sort_type=${sort_type},page=${current_page})}">
-                ulubione -
-            </a>
-            <a class="btn btn-sm btn-warning mb-1 w-25 d-inline-block" th:each="favorite: ${favorites}"
-               th:if="${book.isbn == favorite.book.isbn && #authentication.name.equals(favorite.client.userName) && sort != null && sort_type.equals('default')}"
-               th:href="@{/client/favorites/sort/remove(isbn=*{isbn},type=${type},option=${option},status=${status},page=${current_page})}">
-                ulubione -
-            </a>
-            <a class="btn btn-sm btn-warning mb-1 w-25 d-inline-block" th:each="favorite: ${favorites}"
-               th:if="${book.isbn == favorite.book.isbn && #authentication.name.equals(favorite.client.userName) && search != null && sort_type.equals('default')}"
-               th:href="@{/client/favorites/search/remove(isbn=*{isbn},value=${value},category=${category},status=${status},page=${current_page})}">
-                ulubione -
-            </a>
-            <a class="btn btn-sm btn-warning mb-1 w-25 d-inline-block" th:each="favorite: ${favorites}"
-               th:if="${book.isbn == favorite.book.isbn && #authentication.name.equals(favorite.client.userName) && sort == null && search == null}"
-               th:href="@{/client/favorites/remove(isbn=*{isbn},entity_type=${entity_type},status=${status},page=${current_page})}">
-                ulubione -
-            </a>
+            <th:block th:insert="fragments/books_favorites_links.html :: favorites_links"></th:block>
         </a>
     </div>
 </div>

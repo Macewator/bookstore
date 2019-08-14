@@ -39,10 +39,10 @@ public class OrderService {
     }
 
     public Order getOrder() {
-        return orderPrice(clientOrder.getOrder());
+        return setOrderPrice(clientOrder.getOrder());
     }
 
-    private Order orderPrice(Order order) {
+    private Order setOrderPrice(Order order) {
         double orderPrice = order.getBooks().stream()
                 .mapToDouble(Book::getPrice)
                 .sum();

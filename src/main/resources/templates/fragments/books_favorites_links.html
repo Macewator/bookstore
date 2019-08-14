@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8" name="viewport" content="width=device-width, initial-scale=1">
+    <title>Title</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" th:href="@{/css/styles.css}"/>
+</head>
+<body>
+<th:block th:fragment="favorites_links" sec:authorize="isAuthenticated()">
+    <a class="btn btn-sm btn-success mb-1 w-25 d-inline-block"
+       th:if="${!favorites_isbn.contains(book.isbn) && !favorites_isbn.isEmpty() && sort == null && search == null}"
+       th:href="@{/client/favorites/add(isbn=*{isbn},entity_type=${T(com.bookstore.util.Type).TYPE_DEFAULT},status=${status},page=${current_page})}">
+        ulubione +
+    </a>
+    <a class="btn btn-sm btn-success mb-1 w-25 d-inline-block"
+       th:if="${favorites_isbn.isEmpty() && sort == null && search == null}"
+       th:href="@{/client/favorites/add(isbn=*{isbn},entity_type=${entity_type},status=${status},page=${current_page})}">
+        ulubione +
+    </a>
+
+    <a class="btn btn-sm btn-success mb-1 w-25 d-inline-block"
+       th:if="${!favorites_isbn.contains(book.isbn) && !favorites_isbn.isEmpty() && sort != null && !sort_type.equals('default')}"
+       th:href="@{/client/favorites/sort/add(isbn=*{isbn},type=${type},option=${option},status=${status},search=${search},sort_type=${sort_type},page=${current_page})}">
+        ulubione +
+    </a>
+    <a class="btn btn-sm btn-success mb-1 w-25 d-inline-block"
+       th:if="${favorites_isbn.isEmpty() && sort != null && !sort_type.equals('default')}"
+       th:href="@{/client/favorites/sort/add(isbn=*{isbn},type=${type},option=${option},status=${status},search=${search},sort_type=${sort_type},page=${current_page})}">
+        ulubione +
+    </a>
+
+    <a class="btn btn-sm btn-success mb-1 w-25 d-inline-block"
+       th:if="${!favorites_isbn.contains(book.isbn) && !favorites_isbn.isEmpty() && sort != null && sort_type.equals('default')}"
+       th:href="@{/client/favorites/sort/add(isbn=*{isbn},type=${type},option=${option},status=${status},page=${current_page})}">
+        ulubione +
+    </a>
+    <a class="btn btn-sm btn-success mb-1 w-25 d-inline-block"
+       th:if="${favorites_isbn.isEmpty() && sort != null && sort_type.equals('default')}"
+       th:href="@{/client/favorites/sort/add(isbn=*{isbn},type=${type},option=${option},status=${status},page=${current_page})}">
+        ulubione +
+    </a>
+
+    <a class="btn btn-sm btn-success mb-1 w-25 d-inline-block"
+       th:if="${!favorites_isbn.contains(book.isbn) && !favorites_isbn.isEmpty() && search != null && sort_type.equals('default')}"
+       th:href="@{/client/favorites/search/add(isbn=*{isbn},value=${value},category=${category},status=${status},page=${current_page})}">
+        ulubione +
+    </a>
+    <a class="btn btn-sm btn-success mb-1 w-25 d-inline-block"
+       th:if="${favorites_isbn.isEmpty() && search != null && sort_type.equals('default')}"
+       th:href="@{/client/favorites/search/add(isbn=*{isbn},value=${value},category=${category},status=${status},page=${current_page})}">
+        ulubione +
+    </a>
+
+    <a class="btn btn-sm btn-warning mb-1 w-25 d-inline-block" th:each="favorite: ${favorites}"
+       th:if="${book.isbn == favorite.book.isbn && #authentication.name.equals(favorite.client.userName) && sort != null && !sort_type.equals('default')}"
+       th:href="@{/client/favorites/sort/remove(isbn=*{isbn},type=${type},option=${option},status=${status},search=${search},sort_type=${sort_type},page=${current_page})}">
+        ulubione -
+    </a>
+    <a class="btn btn-sm btn-warning mb-1 w-25 d-inline-block" th:each="favorite: ${favorites}"
+       th:if="${book.isbn == favorite.book.isbn && #authentication.name.equals(favorite.client.userName) && sort != null && sort_type.equals('default')}"
+       th:href="@{/client/favorites/sort/remove(isbn=*{isbn},type=${type},option=${option},status=${status},page=${current_page})}">
+        ulubione -
+    </a>
+    <a class="btn btn-sm btn-warning mb-1 w-25 d-inline-block" th:each="favorite: ${favorites}"
+       th:if="${book.isbn == favorite.book.isbn && #authentication.name.equals(favorite.client.userName) && search != null && sort_type.equals('default')}"
+       th:href="@{/client/favorites/search/remove(isbn=*{isbn},value=${value},category=${category},status=${status},page=${current_page})}">
+        ulubione -
+    </a>
+    <a class="btn btn-sm btn-warning mb-1 w-25 d-inline-block" th:each="favorite: ${favorites}"
+       th:if="${book.isbn == favorite.book.isbn && #authentication.name.equals(favorite.client.userName) && sort == null && search == null}"
+       th:href="@{/client/favorites/remove(isbn=*{isbn},entity_type=${entity_type},status=${status},page=${current_page})}">
+        ulubione -
+    </a>
+</th:block>
+
+<th:block th:fragment="entity_favorites_links" sec:authorize="isAuthenticated()">
+    <a class="btn btn-sm btn-success mb-1 w-25 d-inline-block"
+       th:if="${!favorites_isbn.contains(book.isbn) && !favorites_isbn.isEmpty() && sort == null && search == null}"
+       th:href="@{/client/favorites/add(isbn=*{isbn},entity_id=${entity_id},entity_type=${entity_type},entity_url=${entity_url},status=${status},page=${current_page})}">
+        ulubione +
+    </a>
+    <a class="btn btn-sm btn-success mb-1 w-25 d-inline-block"
+       th:if="${favorites_isbn.isEmpty() && sort == null && search == null}"
+       th:href="@{/client/favorites/add(isbn=*{isbn},entity_id=${entity_id},entity_type=${entity_type},entity_url=${entity_url},status=${status},page=${current_page})}">
+        ulubione +
+    </a>
+
+    <a class="btn btn-sm btn-success mb-1 w-25 d-inline-block"
+       th:if="${!favorites_isbn.contains(book.isbn) && !favorites_isbn.isEmpty() && sort != null && !sort_type.equals('default')}"
+       th:href="@{/client/favorites/sort/add(isbn=*{isbn},entity_id=${entity_id},entity_name=${entity_url},type=${type},option=${option},status=${status},search=${search},sort_type=${sort_type},page=${current_page})}">
+        ulubione +
+    </a>
+    <a class="btn btn-sm btn-success mb-1 w-25 d-inline-block"
+       th:if="${favorites_isbn.isEmpty() && sort != null && !sort_type.equals('default')}"
+       th:href="@{/client/favorites/sort/add(isbn=*{isbn},entity_id=${entity_id},entity_name=${entity_url},type=${type},option=${option},status=${status},search=${search},sort_type=${sort_type},page=${current_page})}">
+        ulubione +
+    </a>
+
+    <a class="btn btn-sm btn-success mb-1 w-25 d-inline-block"
+       th:if="${!favorites_isbn.contains(book.isbn) && !favorites_isbn.isEmpty() && sort != null && sort_type.equals('default')}"
+       th:href="@{/client/favorites/sort/add(isbn=*{isbn},entity_id=${entity_id},entity_name=${entity_url},type=${type},option=${option},status=${status},page=${current_page})}">
+        ulubione +
+    </a>
+    <a class="btn btn-sm btn-success mb-1 w-25 d-inline-block"
+       th:if="${favorites_isbn.isEmpty() && sort != null && sort_type.equals('default')}"
+       th:href="@{/client/favorites/sort/add(isbn=*{isbn},entity_id=${entity_id},entity_name=${entity_url},type=${type},option=${option},status=${status},page=${current_page})}">
+        ulubione +
+    </a>
+
+    <a class="btn btn-sm btn-success mb-1 w-25 d-inline-block"
+       th:if="${!favorites_isbn.contains(book.isbn) && !favorites_isbn.isEmpty() && search != null && sort_type.equals('default')}"
+       th:href="@{/client/favorites/search/add(isbn=*{isbn},entity_id=${entity_id},entity_name=${entity_url},value=${value},category=${category},status=${status},page=${current_page})}">
+        ulubione +
+    </a>
+    <a class="btn btn-sm btn-success mb-1 w-25 d-inline-block"
+       th:if="${favorites_isbn.isEmpty() && search != null && sort_type.equals('default')}"
+       th:href="@{/client/favorites/search/add(isbn=*{isbn},entity_id=${entity_id},entity_name=${entity_url},value=${value},category=${category},status=${status},page=${current_page})}">
+        ulubione +
+    </a>
+
+    <a class="btn btn-sm btn-warning mb-1 w-25 d-inline-block" th:each="favorite: ${favorites}"
+       th:if="${book.isbn == favorite.book.isbn && #authentication.name.equals(favorite.client.userName) && sort != null && !sort_type.equals('default')}"
+       th:href="@{/client/favorites/sort/remove(isbn=*{isbn},entity_id=${entity_id},entity_name=${entity_url},type=${type},option=${option},status=${status},search=${search},sort_type=${sort_type},page=${current_page})}">
+        ulubione -
+    </a>
+    <a class="btn btn-sm btn-warning mb-1 w-25 d-inline-block" th:each="favorite: ${favorites}"
+       th:if="${book.isbn == favorite.book.isbn && #authentication.name.equals(favorite.client.userName) && sort != null && sort_type.equals('default')}"
+       th:href="@{/client/favorites/sort/remove(isbn=*{isbn},entity_id=${entity_id},entity_name=${entity_url},type=${type},option=${option},status=${status},page=${current_page})}">
+        ulubione -
+    </a>
+    <a class="btn btn-sm btn-warning mb-1 w-25 d-inline-block" th:each="favorite: ${favorites}"
+       th:if="${book.isbn == favorite.book.isbn && #authentication.name.equals(favorite.client.userName) && search != null && sort_type.equals('default')}"
+       th:href="@{/client/favorites/search/remove(isbn=*{isbn},entity_id=${entity_id},entity_name=${entity_url},value=${value},category=${category},status=${status},page=${current_page})}">
+        ulubione -
+    </a>
+    <a class="btn btn-sm btn-warning mb-1 w-25 d-inline-block" th:each="favorite: ${favorites}"
+       th:if="${book.isbn == favorite.book.isbn && #authentication.name.equals(favorite.client.userName) && sort == null && search == null}"
+       th:href="@{/client/favorites/remove(isbn=*{isbn},entity_type=${entity_type},entity_id=${entity_id},entity_url=${entity_url},status=${status},page=${current_page})}">
+        ulubione -
+    </a>
+</th:block>
+</body>
+</html>

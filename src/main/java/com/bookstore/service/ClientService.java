@@ -4,13 +4,12 @@ import com.bookstore.model.*;
 import com.bookstore.repository.*;
 import com.bookstore.util.ClientNotFoundException;
 import com.bookstore.util.Type;
+import com.bookstore.util.UriBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.NoSuchElementException;
-import java.util.Optional;
+import java.util.*;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -195,8 +194,8 @@ public class ClientService {
         return favoritesRepository.findAll();
     }
 
-    public List<Long> getAllBookIsbnFromFavorites() {
-        return favoritesRepository.findAll().stream()
+    public List<Long> getAllBookIsbnFromFavorites(String userName) {
+        return favoritesRepository.findAllByClient_UserName(userName).stream()
                 .map(Favorites::getBook)
                 .map(Book::getIsbn)
                 .collect(Collectors.toList());
@@ -212,7 +211,7 @@ public class ClientService {
         return pageNumbers;
     }
 
-    public String redirectForEntityType(Type entityType, Long isbn, Long entity_id, String entity_url, String status, int page) {
+    public String redirectForEntityType(Type entityType, Long isbn, Long entity_id, String entity_url, String status, Integer page) {
         switch (entityType) {
             case TYPE_BOOK:
                 return "redirect:/books/details?isbn=" + isbn;
@@ -221,9 +220,9 @@ public class ClientService {
             case TYPE_PUBLISHER:
                 return "redirect:/publishers/books?entity_id=" + entity_id + "&page=" + page;
             case TYPE_STATUS:
-                if(entity_id != 999){
+                if (entity_id != null) {
                     return "redirect:/" + entity_url + "/books/" + status + "?page=" + page;
-                }else {
+                } else {
                     return "redirect:/books/filter/" + status + "?page=" + page;
                 }
             default:
@@ -232,25 +231,23 @@ public class ClientService {
     }
 
     public String redirectForAction(
-            String action, Long entity_id, String type, String option, String value, String category, String status, Boolean search, String sort_type, int page) {
-        if(entity_id != 999){
-            if (search){
-                return "redirect:/authors/books/sort?entity_id=" + entity_id + "&type=" + type + "&option=" + option + "&status=" + status + "&search=" + search + "&sort_type=" + sort_type + "&page=" + page;
-            } else if (action.equals(ACTION_SORT_BOOKS.getAction())) {
-                return "redirect:/authors/books/sort?entity_id=" + entity_id + "&type=" + type + "&option=" + option + "&status=" + status + "&page=" + page;
-            } else if (action.equals(ACTION_SEARCH_BOOKS.getAction())) {
-                return "redirect:/authors/books/search?entity_id=" + entity_id + "&value=" + value + "&category=" + category + "&status=" + status + "&page=" + page;
-            }
-        }else {
-            if (search) {
-                return "redirect:/books/sort?type=" + type + "&option=" + option + "&status=" + status + "&search=" + search + "&sort_type=" + sort_type + "&page=" + page;
-            } else if (action.equals(ACTION_SORT_BOOKS.getAction())) {
-                return "redirect:/books/sort?type=" + type + "&option=" + option + "&status=" + status + "&page=" + page;
-            } else if (action.equals(ACTION_SEARCH_BOOKS.getAction())) {
-                return "redirect:/books/search?value=" + value + "&category=" + category + "&status=" + status + "&page=" + page;
-            }
-        }
-        return "redirect:/books?page=" + page;
-    }
+            String action, Long entity_id, String entity_name, String type, String option, String value,
+            String category, String status, Boolean search, String sort_type, int page) {
 
+        String url = entity_id != null ? "/" + entity_name + "/books/" : "/books/";
+        String actionUrl = action.equals(ACTION_SEARCH_BOOKS.getAction()) ? url + "search" : url + "sort";
+        String builtUrl = new UriBuilder(actionUrl)
+                .param("entity_id", entity_id)
+                .param("type", type)
+                .param("value", value)
+                .param("option", option)
+                .param("category", category)
+                .param("status", status)
+                .param("search", search)
+                .param("sort_type", sort_type)
+                .param("page", page)
+                .build();
+
+        return "redirect:" + builtUrl;
+    }
 }

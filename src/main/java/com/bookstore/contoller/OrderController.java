@@ -13,12 +13,12 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import static com.bookstore.util.Action.*;
-
 import java.util.NoSuchElementException;
 
 @Controller
 public class OrderController {
+
+    private static final String DEFAULT_VALUE = "default";
 
     private OrderService orderService;
     private ClientService clientService;
@@ -32,7 +32,7 @@ public class OrderController {
     @GetMapping("/order/add")
     public String addBookToOrder(@RequestParam Long isbn,
                                  @RequestParam(required = false) Type entity_type,
-                                 @RequestParam(defaultValue = "999") Long entity_id,
+                                 @RequestParam(required = false) Long entity_id,
                                  @RequestParam(required = false) String entity_url,
                                  @RequestParam(required = false) String status,
                                  @RequestParam int page, RedirectAttributes attr) {
@@ -49,39 +49,42 @@ public class OrderController {
     @GetMapping("/order/{action}/add")
     public String addBookToOrder(@PathVariable(required = false) String action,
                                  @RequestParam Long isbn,
-                                 @RequestParam(defaultValue = "999") Long entity_id,
+                                 @RequestParam(required = false) Long entity_id,
+                                 @RequestParam(required = false) String entity_name,
                                  @RequestParam(required = false) String type,
                                  @RequestParam(required = false) String option,
-                                 @RequestParam(defaultValue = "default") String value,
-                                 @RequestParam(defaultValue = "default") String category,
+                                 @RequestParam(defaultValue = DEFAULT_VALUE) String value,
+                                 @RequestParam(defaultValue = DEFAULT_VALUE) String category,
                                  @RequestParam(required = false) String status,
-                                 @RequestParam(defaultValue = "false") Boolean search,
+                                 @RequestParam(required = false) Boolean search,
                                  @RequestParam(required = false) String sort_type,
                                  @RequestParam int page, RedirectAttributes attr) {
         try {
             orderService.addBookToOrder(isbn);
         } catch (NoSuchElementException e) {
             attr.addFlashAttribute("exception", e.getMessage());
-            return clientService.redirectForAction(action, entity_id, type, option, value, category, status, search, sort_type, page);
+            return clientService.redirectForAction(action, entity_id, entity_name, type,  option, value, category, status, search, sort_type, page);
         }
         attr.addFlashAttribute("message", new Message("Add", "książke dodano do zamówienia"));
-        return clientService.redirectForAction(action, entity_id, type, option, value, category, status, search, sort_type, page);
+        return clientService.redirectForAction(action, entity_id, entity_name, type, option, value, category, status, search, sort_type, page);
     }
 
-    @RequestMapping(value = "/order/{action}", method = {RequestMethod.GET, RequestMethod.POST})
-    public String confirmOrder(@PathVariable String action, @ModelAttribute Address address,
-                               Authentication client, Model model) {
-        if (action.equals(ACTION_CONFIRM_ORDER.getAction())) {
-            try {
-                orderService.confirmOrder(clientService.findClientByUserName(client.getName()), address);
-                model.addAttribute("message", new Message("Confirm", "Twoje zamówienie przkazano do realizacji"));
-            } catch (ClientNotFoundException e) {
-                model.addAttribute("exception", e.getMessage());
-            }
-        } else if (action.equals(ACTION_CLEAR_ORDER.getAction())) {
-            orderService.clearOrder();
-            model.addAttribute("message", new Message("Empty", "Twoje zamówienie jest puste"));
+    @PostMapping("/order/confirm")
+    public String confirmOrder(@ModelAttribute Address address, Authentication auth, Model model) {
+        try {
+            orderService.confirmOrder(clientService.findClientByUserName(auth.getName()), address);
+            model.addAttribute("message", new Message("Confirm", "Twoje zamówienie przkazano do realizacji"));
+        } catch (ClientNotFoundException e) {
+            model.addAttribute("exception", e.getMessage());
         }
+        return "account";
+    }
+
+    @GetMapping("/order/clear")
+    public String clearOrder(@ModelAttribute Address address, Model model) {
+        orderService.clearOrder();
+        model.addAttribute("client_template", "order");
+        model.addAttribute("message", new Message("Empty", "Twoje zamówienie jest puste"));
         return "account";
     }
 }

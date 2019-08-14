@@ -5,7 +5,6 @@ import com.bookstore.model.CreditCard;
 import com.bookstore.service.ClientService;
 import com.bookstore.service.CreditCardService;
 import com.bookstore.util.ClientNotFoundException;
-import com.bookstore.util.Message;
 import com.bookstore.service.OrderService;
 import com.bookstore.util.OrderStatus;
 import com.bookstore.util.Type;
@@ -20,14 +19,9 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import javax.validation.Valid;
 import java.util.NoSuchElementException;
 
-import static com.bookstore.util.Option.*;
-
 @Controller
 @SessionAttributes({"edit", "client", "update"})
 public class ClientController {
-
-    private static final String ACTION_ADD = "add";
-    private static final String ACTION_REMOVE = "remove";
 
     private ClientService clientService;
     private OrderService orderService;
@@ -93,97 +87,125 @@ public class ClientController {
         return "redirect:/";
     }
 
-    @GetMapping("/client/{option}")
-    public String clientAccount(@PathVariable String option, Authentication auth, Model model) {
+    @GetMapping("/client/account")
+    public String clientAccount(Authentication auth, Model model) {
         String userName = auth.getName();
-        switch (getSelectedOption(option)) {
-            case OPTION_ACCOUNT:
-                try {
-                    model.addAttribute("client", clientService.findClientByUserName(userName));
-                    model.addAttribute("client_info", true);
-                } catch (ClientNotFoundException e) {
-                    model.addAttribute("exception", e.getMessage());
-                }
-                break;
-            case OPTION_ORDER:
-                model.addAttribute("order", orderService.getOrder());
-                model.addAttribute("orderAddress", clientService.findClientAddress(userName));
-                model.addAttribute("client_order", true);
-                break;
-            case OPTION_HISTORY:
-                model.addAttribute("history", orderService.getOrderHistory(userName));
-                model.addAttribute("client_history", true);
-                break;
-            case OPTION_PAYMENT:
-                try {
-                    model.addAttribute("credit_card", clientService.findClientCreditCard(userName));
-                    model.addAttribute("payment", true);
-                } catch (ClientNotFoundException e) {
-                    model.addAttribute("exception", e.getMessage());
-                }
-                break;
-            case OPTION_FAVORITES:
-                model.addAttribute("books", clientService.getAllClientFavorites(userName));
-                model.addAttribute("favorites", true);
-                break;
-            default:
-                model.addAttribute("message", new Message("Option", "brak żądanej opcji"));
+        try {
+            model.addAttribute("client", clientService.findClientByUserName(userName));
+            model.addAttribute("client_template", "info");
+        } catch (ClientNotFoundException e) {
+            model.addAttribute("exception", e.getMessage());
         }
         return "account";
     }
 
-    @GetMapping("/client/favorites/{process}")
-    public String manageClientFavorites(@PathVariable String process, @RequestParam Long isbn,
-                                        @RequestParam(required = false) Type entity_type,
-                                        @RequestParam(required = false) Long entity_id,
-                                        @RequestParam(required = false) String entity_url,
-                                        @RequestParam(required = false) String status,
-                                        @RequestParam(defaultValue = "0") int page,
-                                        Authentication auth, Model model) {
-        if (process.equals(ACTION_ADD)) {
-            try {
-                clientService.addToFavorites(isbn, auth.getName());
-            } catch (NoSuchElementException | ClientNotFoundException e) {
-                model.addAttribute("exception", e.getMessage());
-            }
-            return clientService.redirectForEntityType(entity_type, isbn, entity_id, entity_url, status, page);
-        } else if (process.equals(ACTION_REMOVE)) {
-            model.addAttribute("books", clientService.removeFromFavorites(isbn, auth.getName()));
-            if (entity_type != Type.TYPE_ACCOUNT) {
-                return clientService.redirectForEntityType(entity_type, isbn, entity_id, entity_url, status, page);
-            }
-            return "redirect:/client/favorites";
-        }
-        return "redirect:/";
+    @GetMapping("/client/order")
+    public String clientOrder(Authentication auth, Model model) {
+        String userName = auth.getName();
+        model.addAttribute("order", orderService.getOrder());
+        model.addAttribute("orderAddress", clientService.findClientAddress(userName));
+        model.addAttribute("client_template", "order");
+        return "account";
     }
 
-    @GetMapping("/client/favorites/{action}/{process}")
-    public String manageClientFavorites(@PathVariable String action,
-                                        @PathVariable String process,
-                                        @RequestParam Long isbn,
-                                        @RequestParam(defaultValue = "999") Long entity_id,
-                                        @RequestParam(required = false) String type,
-                                        @RequestParam(required = false) String option,
-                                        @RequestParam(required = false) String value,
-                                        @RequestParam(required = false) String category,
-                                        @RequestParam(required = false) String status,
-                                        @RequestParam(defaultValue = "false") Boolean search,
-                                        @RequestParam(required = false) String sort_type,
-                                        @RequestParam int page, RedirectAttributes attr,
-                                        Authentication auth) {
-        if (process.equals(ACTION_ADD)) {
-            try {
-                clientService.addToFavorites(isbn, auth.getName());
-            } catch (NoSuchElementException | ClientNotFoundException e) {
-                attr.addFlashAttribute("exception", e.getMessage());
-            }
-            return clientService.redirectForAction(action, entity_id, type, option, value, category, status, search, sort_type, page);
-        } else if (process.equals(ACTION_REMOVE)) {
-            clientService.removeFromFavorites(isbn, auth.getName());
-            return clientService.redirectForAction(action, entity_id, type, option, value, category, status, search, sort_type, page);
-        }
-        return "redirect:/";
+    @GetMapping("/client/history")
+    public String clientHistory(Authentication auth, Model model) {
+        String userName = auth.getName();
+        model.addAttribute("history", orderService.getOrderHistory(userName));
+        model.addAttribute("client_template", "history");
+        return "account";
     }
+
+    @GetMapping("/client/payment")
+    public String clientPayment(Authentication auth, Model model) {
+        String userName = auth.getName();
+        try {
+            model.addAttribute("credit_card", clientService.findClientCreditCard(userName));
+            model.addAttribute("client_template", "payment");
+        } catch (ClientNotFoundException e) {
+            model.addAttribute("exception", e.getMessage());
+        }
+        return "account";
+    }
+
+    @GetMapping("/client/favorites")
+    public String clientFavorites(Authentication auth, Model model) {
+        String userName = auth.getName();
+        model.addAttribute("books", clientService.getAllClientFavorites(userName));
+        model.addAttribute("client_template", "favorites");
+        return "account";
+    }
+
+    @GetMapping("/client/favorites/add")
+    public String addBookToFavorites(@RequestParam Long isbn,
+                                     @RequestParam(required = false) Type entity_type,
+                                     @RequestParam(required = false) Long entity_id,
+                                     @RequestParam(required = false) String entity_url,
+                                     @RequestParam(required = false) String status,
+                                     @RequestParam(required = false) Integer page,
+                                     Authentication auth, Model model) {
+        try {
+            clientService.addToFavorites(isbn, auth.getName());
+        } catch (NoSuchElementException | ClientNotFoundException e) {
+            model.addAttribute("exception", e.getMessage());
+        }
+        return clientService.redirectForEntityType(entity_type, isbn, entity_id, entity_url, status, page);
+    }
+
+    @GetMapping("/client/favorites/remove")
+    public String removeBookFromFavorites(@RequestParam Long isbn,
+                                          @RequestParam(required = false) Type entity_type,
+                                          @RequestParam(required = false) Long entity_id,
+                                          @RequestParam(required = false) String entity_url,
+                                          @RequestParam(required = false) String status,
+                                          @RequestParam(required = false) Integer page,
+                                          Authentication auth, Model model) {
+        model.addAttribute("books", clientService.removeFromFavorites(isbn, auth.getName()));
+        if (entity_type != Type.TYPE_ACCOUNT) {
+            return clientService.redirectForEntityType(entity_type, isbn, entity_id, entity_url, status, page);
+        }
+        return "redirect:/client/favorites";
+    }
+
+    @GetMapping("/client/favorites/{action}/add")
+    public String addBookToFavoritesAfterAction(@PathVariable String action,
+                                                @RequestParam Long isbn,
+                                                @RequestParam(required = false) Long entity_id,
+                                                @RequestParam(required = false) String type,
+                                                @RequestParam(required = false) String entity_name,
+                                                @RequestParam(required = false) String option,
+                                                @RequestParam(required = false) String value,
+                                                @RequestParam(required = false) String category,
+                                                @RequestParam(required = false) String status,
+                                                @RequestParam(required = false) Boolean search,
+                                                @RequestParam(required = false) String sort_type,
+                                                @RequestParam Integer page, RedirectAttributes attr,
+                                                Authentication auth) {
+        try {
+            clientService.addToFavorites(isbn, auth.getName());
+        } catch (NoSuchElementException | ClientNotFoundException e) {
+            attr.addFlashAttribute("exception", e.getMessage());
+        }
+        return clientService.redirectForAction(action, entity_id, entity_name, type, option, value, category, status, search, sort_type, page);
+    }
+
+    @GetMapping("/client/favorites/{action}/remove")
+    public String removeBookFromFavoritesAfterAction(@PathVariable String action,
+                                                     @RequestParam Long isbn,
+                                                     @RequestParam(required = false) Long entity_id,
+                                                     @RequestParam(required = false) String type,
+                                                     @RequestParam(required = false) String entity_name,
+                                                     @RequestParam(required = false) String option,
+                                                     @RequestParam(required = false) String value,
+                                                     @RequestParam(required = false) String category,
+                                                     @RequestParam(required = false) String status,
+                                                     @RequestParam(required = false) Boolean search,
+                                                     @RequestParam(required = false) String sort_type,
+                                                     @RequestParam Integer page, Authentication auth) {
+        clientService.removeFromFavorites(isbn, auth.getName());
+        return clientService.redirectForAction(action, entity_id, entity_name, type, option, value, category, status, search, sort_type, page);
+    }
+
 
     @GetMapping("/client/history/delete")
     public String manageClientHistory(@RequestParam OrderStatus status, Authentication auth) {

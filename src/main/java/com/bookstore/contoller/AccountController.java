@@ -118,7 +118,7 @@ public class AccountController {
     }
 
     @PostMapping("/payment/update")
-    public String updateClientPaymentConfirm(@ModelAttribute @Valid CreditCard card,
+    public String updateClientPaymentConfirm(@ModelAttribute("card") @Valid CreditCard card,
                                              BindingResult bindingResult,
                                              Authentication auth, Model model) {
         if (bindingResult.hasErrors()) {

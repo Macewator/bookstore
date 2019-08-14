@@ -11,6 +11,7 @@
 <th:block th:insert="fragments/generals.html :: navbar"></th:block>
 
 <div class="container-fluid" style="padding-left: 10%">
+    <p class="text-center alert alert-danger" th:if="${exception != null}" th:text="${exception}"></p>
     <div class="col-6 offset-3 mt-4" th:if="${update == null}">
         <h5>Dane karty kredytowej</h5>
         <form action="#" th:action="@{/register/payment}" method="post" th:object="${card}">
