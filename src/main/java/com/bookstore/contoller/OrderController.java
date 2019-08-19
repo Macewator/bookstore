@@ -77,6 +77,7 @@ public class OrderController {
         } catch (ClientNotFoundException e) {
             model.addAttribute("exception", e.getMessage());
         }
+        model.addAttribute("client_template", "order");
         return "account";
     }
 

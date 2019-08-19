@@ -21,7 +21,7 @@ import java.util.NoSuchElementException;
 import static com.bookstore.util.Type.*;
 
 @Controller
-@SessionAttributes({"value", "category", "pageNumbers"})
+@SessionAttributes({"value", "category", "pageNumbers", "favorites", "favorites_isbn"})
 public class BookController {
 
     private static final String DEFAULT_VALUE = "default";

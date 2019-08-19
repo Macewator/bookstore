@@ -222,6 +222,7 @@ public class ClientController {
             model.addAttribute("history", orderService.findAllByStatus(status));
         }
         model.addAttribute("client_history", true);
+        model.addAttribute("client_template", "history");
         return "account";
     }
 }

@@ -15,14 +15,12 @@ public class Order {
     @Column(name = "id_order")
     private Long id;
 
-    @Column(name = "order_price")
     private Double orderPrice;
 
     @Embedded
     private Address orderAddress;
 
     @Enumerated(value = EnumType.STRING)
-    @Column(name = "order_status")
     private OrderStatus orderStatus;
 
     @ManyToOne

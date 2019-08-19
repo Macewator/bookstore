@@ -9,7 +9,6 @@ import java.io.Serializable;
 import java.util.*;
 
 @Entity
-@Table(name = "client")
 public class Client implements Serializable {
 
     private static final long serialVersionUID = 5206902368022108208L;
@@ -27,11 +26,9 @@ public class Client implements Serializable {
     private String password;
 
     @NotBlank
-    @Column(name = "first_name")
     private String firstName;
 
     @NotBlank
-    @Column(name = "last_name")
     private String lastName;
 
     @Valid

@@ -5,7 +5,6 @@ import java.util.Set;
 import java.util.TreeSet;
 
 @Entity
-@Table(name = "author")
 public class Author implements Comparable<Author> {
 
     @Id
@@ -13,13 +12,11 @@ public class Author implements Comparable<Author> {
     @Column(name = "id_author")
     private Long id;
 
-    @Column(name = "first_name")
     private String firstName;
 
-    @Column(name = "last_name")
     private String lastName;
 
-    @Column(name = "short_bio", unique = true, length = 100)
+    @Column(unique = true, length = 100)
     private String shortBio;
 
     @OneToMany(mappedBy = "author", fetch = FetchType.EAGER)

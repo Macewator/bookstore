@@ -5,7 +5,6 @@ import java.util.Set;
 import java.util.TreeSet;
 
 @Entity
-@Table(name = "publisher")
 public class Publisher implements Comparable<Publisher>{
 
     @Id
@@ -13,10 +12,10 @@ public class Publisher implements Comparable<Publisher>{
     @Column(name = "id_publisher")
     private Long id;
 
-    @Column(name = "publisher_name", unique = true)
+    @Column(unique = true)
     private String publisherName;
 
-    @Column(name = "www_page", unique = true)
+    @Column(unique = true)
     private String wwwPage;
 
     @Embedded

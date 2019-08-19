@@ -9,7 +9,6 @@ public class Comment {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "client_comment")
     private String clientComment;
 
     @ManyToOne
