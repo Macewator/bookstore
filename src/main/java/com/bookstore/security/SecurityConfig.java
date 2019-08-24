@@ -28,7 +28,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(staticResources).permitAll()
                 .antMatchers("/", "/register", "/register/payment").permitAll()
                 .antMatchers("/books","/books/details", "/books/sort",
-                        "/books/search", "/books/filter/{status}").permitAll()
+                        "/books/search", "/books/{status}").permitAll()
                 .antMatchers("/authors", "/authors/books", "/authors/search",
                         "/authors/books/search", "/authors/books/sort", "/authors/books/{status}").permitAll()
                 .antMatchers("/publishers", "/publishers/books", "/publishers/search",
