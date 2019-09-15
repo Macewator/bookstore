@@ -91,9 +91,9 @@
         <div class="tab-content">
             <div class="tab-pane active" id="add">
                 <div class="col-6 mb-1">
-                    <form action="#" th:action="@{/books/comments}" method="post">
+                    <form th:action="@{/books/comments}" method="post">
                         <label for="comment">Twój komentarz</label>
-                        <button class="btn btn-sm btn-primary" type="submit">dodaj</button>
+                        <button class="btn btn-sm btn-primary" sec:authorize="isAuthenticated()" type="submit">dodaj</button>
                         <textarea name="comment" rows="3" cols="70" id="comment"
                                   placeholder="Twój komentarz"></textarea>
                         <input type="hidden" name="isbn" th:value="${book.isbn}">

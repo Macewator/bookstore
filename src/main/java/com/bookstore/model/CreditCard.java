@@ -17,15 +17,15 @@ public class CreditCard {
     @Column(name = "owner_name")
     private String ownerName;
 
-    @Pattern(regexp = "\\d{16}")
+    @Pattern(regexp = "\\d{16}", message = "Credit card should contain 16 digits")
     @Column(name = "credit_card_number", unique = true)
     private String creditCardNumber;
 
-    @Pattern(regexp = "\\d{2}-\\d{4}")
+    @Pattern(regexp = "\\d{2}-\\d{4}", message = "Expired date format: 00-0000")
     @Column(name = "expire_date")
     private String expireDate;
 
-    @Pattern(regexp = "\\d{3}")
+    @Pattern(regexp = "\\d{3}", message = "Cvv number should contain 3 digits")
     @Column(name = "cvv_number", unique = true)
     private String cvvNumber;
 
