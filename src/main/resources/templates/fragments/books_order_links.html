@@ -8,41 +8,24 @@
 </head>
 <body>
 <th:block th:fragment="order_links">
-    <th:block sec:authorize="isAnonymous()">
-        <a class="btn btn-sm btn-info btn-block mb-1" th:if="${sort != null && !sort_type.equals('default')}"
-           th:href="@{/order/sort/add(isbn=*{isbn},type=${type},option=${option},status=${status},search=${search},sort_type=${sort_type},page=${current_page})}">
-            zamów
-        </a>
-        <a class="btn btn-sm btn-info btn-block mb-1" th:if="${sort != null && sort_type.equals('default')}"
-           th:href="@{/order/sort/add(isbn=*{isbn},type=${type},option=${option},status=${status},page=${current_page})}">
-            zamów
-        </a>
-        <a class="btn btn-sm btn-info btn-block mb-1" th:if="${search != null && sort_type.equals('default')}"
-           th:href="@{/order/search/add(isbn=*{isbn},value=${value},category=${category},status=${status},page=${current_page})}">
-            zamów
-        </a>
-        <a class="btn btn-sm btn-info btn-block mb-1" th:if="${sort == null && search == null}"
-           th:href="@{/order/add(isbn=*{isbn},entity_type=${entity_type},status=${status},page=${current_page})}">
-            zamów
-        </a>
-    </th:block>
-    <th:block sec:authorize="isAuthenticated()">
-        <a class="btn btn-sm btn-info mb-1" style="width: 436px"
+    <th:block>
+        <a class="btn btn-sm btn-success btn-block mb-1 mt-0 mt-0"
            th:if="${sort != null && !sort_type.equals('default')}"
            th:href="@{/order/sort/add(isbn=*{isbn},type=${type},option=${option},status=${status},search=${search},sort_type=${sort_type},page=${current_page})}">
             zamów
         </a>
-        <a class="btn btn-sm btn-info mb-1" style="width: 436px"
+        <a class="btn btn-sm btn-success btn-block mb-1 mt-0"
            th:if="${sort != null && sort_type.equals('default')}"
            th:href="@{/order/sort/add(isbn=*{isbn},type=${type},option=${option},status=${status},page=${current_page})}">
             zamów
         </a>
-        <a class="btn btn-sm btn-info mb-1" style="width: 436px"
+        <a class="btn btn-sm btn-success btn-block mb-1 mt-0"
            th:if="${search != null && sort_type.equals('default')}"
            th:href="@{/order/search/add(isbn=*{isbn},value=${value},category=${category},status=${status},page=${current_page})}">
             zamów
         </a>
-        <a class="btn btn-sm btn-info mb-1" style="width: 436px" th:if="${sort == null && search == null}"
+        <a class="btn btn-sm btn-success btn-block mb-1 mt-0"
+           th:if="${sort == null && search == null}"
            th:href="@{/order/add(isbn=*{isbn},entity_type=${entity_type},status=${status},page=${current_page})}">
             zamów
         </a>
@@ -50,41 +33,23 @@
 </th:block>
 
 <th:block th:fragment="entity_order_links">
-    <th:block sec:authorize="isAnonymous()">
-        <a class="btn btn-sm btn-info btn-block mb-1" th:if="${sort != null && !sort_type.equals('default')}"
-           th:href="@{/order/sort/add(isbn=*{isbn},entity_id=${entity_id},entity_name=${entity_url},type=${type},option=${option},status=${status},search=${search},sort_type=${sort_type},page=${current_page})}">
-            zamów
-        </a>
-        <a class="btn btn-sm btn-info btn-block mb-1" th:if="${sort != null && sort_type.equals('default')}"
-           th:href="@{/order/sort/add(isbn=*{isbn},entity_id=${entity_id},entity_name=${entity_url},type=${type},option=${option},status=${status},page=${current_page})}">
-            zamów
-        </a>
-        <a class="btn btn-sm btn-info btn-block mb-1" th:if="${search != null && sort_type.equals('default')}"
-           th:href="@{/order/search/add(isbn=*{isbn},entity_id=${entity_id},entity_name=${entity_url},value=${value},category=${category},status=${status},page=${current_page})}">
-            zamów
-        </a>
-        <a class="btn btn-sm btn-info btn-block mb-1" th:if="${sort == null && search == null}"
-           th:href="@{/order/add(isbn=*{isbn},entity_type=${entity_type},entity_id=${entity_id},entity_url=${entity_url},status=${status},page=${current_page})}">
-            zamów
-        </a>
-    </th:block>
-    <th:block sec:authorize="isAuthenticated()">
-        <a class="btn btn-sm btn-info mb-1" style="width: 436px"
+    <th:block>
+        <a class="btn btn-sm btn-success btn-block mb-1 mt-0"
            th:if="${sort != null && !sort_type.equals('default')}"
            th:href="@{/order/sort/add(isbn=*{isbn},entity_id=${entity_id},entity_name=${entity_url},type=${type},option=${option},status=${status},search=${search},sort_type=${sort_type},page=${current_page})}">
             zamów
         </a>
-        <a class="btn btn-sm btn-info mb-1" style="width: 436px"
+        <a class="btn btn-sm btn-success btn-block mb-1 mt-0"
            th:if="${sort != null && sort_type.equals('default')}"
            th:href="@{/order/sort/add(isbn=*{isbn},entity_id=${entity_id},entity_name=${entity_url},type=${type},option=${option},status=${status},page=${current_page})}">
             zamów
         </a>
-        <a class="btn btn-sm btn-info mb-1" style="width: 436px"
+        <a class="btn btn-sm btn-success btn-block mb-1 mt-0"
            th:if="${search != null && sort_type.equals('default')}"
            th:href="@{/order/search/add(isbn=*{isbn},entity_id=${entity_id},entity_name=${entity_url},value=${value},category=${category},status=${status},page=${current_page})}">
             zamów
         </a>
-        <a class="btn btn-sm btn-info mb-1" style="width: 436px" th:if="${sort == null && search == null}"
+        <a class="btn btn-sm btn-success btn-block mb-1 mt-0" th:if="${sort == null && search == null}"
            th:href="@{/order/add(isbn=*{isbn},entity_type=${entity_type},entity_id=${entity_id},entity_url=${entity_url},status=${status},page=${current_page})}">
             zamów
         </a>
