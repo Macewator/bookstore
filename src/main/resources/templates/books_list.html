@@ -31,7 +31,7 @@
                     <a class="nav-link" th:href="@{/__${entity_url}__/books(entity_id=${entity_id},page=1)}">Pełna oferta</a>
                 </ul>
 
-                <th:block th:insert="fragments/books_sort_links.html :: sort_links"></th:block>
+                <th:block th:insert="fragments/books_sort_links.html :: entity_sort_links"></th:block>
 
             </div>
         </div>

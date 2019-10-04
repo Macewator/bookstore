@@ -28,13 +28,14 @@
     </div>
 
     <div class="row">
-        <form class="col-4 offset-5 mt-3" action="#" th:action="@{/authors/search}" method="get">
+        <form class="col-4 offset-5 mt-3" th:action="@{/authors/search}" method="get">
             <label>
                 <input type="text" th:name="name" placeholder="search..">
             </label>
             <input class="btn btn-sm btn-info" type="submit" value="szukaj">
         </form>
     </div>
+
     <div class="list-group col-5 offset-4 mt-4 shadow p-3 mb-5 d-inline-block">
         <a href="#" class="list-group-item list-group-item-action flex-column align-items-start"
            th:each="author: ${authors}" th:object="${author}" th:href="@{/authors/books(entity_id=${author.id},page=1)}">

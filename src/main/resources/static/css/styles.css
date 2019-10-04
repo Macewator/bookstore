@@ -44,10 +44,24 @@ textarea {
     color: #111111;
 }
 
+.list div > a {
+    padding: 5px 0px 5px 5px;
+    color: #111111;
+}
+
 .list > a:hover {
     background-color: rgba(255, 255, 255, 0.2);
     border-left: 5px solid white;
     color: white;
     font-weight: bolder;
 }
+
+.list div > a:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+    border-left: 5px solid white;
+    color: white;
+    font-weight: bolder;
+}
+
+
 
