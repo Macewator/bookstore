@@ -13,17 +13,17 @@
         <div class="container text-center text-white jumbo-container">
             <h1 class="display-3">Bookie</h1>
             <p>Zamówienia</p>
-            <a href="#" th:href="@{/}">Strona główna</a>
+            <a th:href="@{/}">Strona główna</a>
         </div>
     </div>
     <div class="row">
         <div class="col-12">
             <div class="text-center mb-2">
-                <a href="#" th:href="@{/panel/zamowienia(status=${T(com.bookstore.util.OrderStatus).NEW.name()})}"
+                <a th:href="@{/panel/zamowienia(status=${T(com.bookstore.util.OrderStatus).NEW.name()})}"
                    class="btn btn-warning mx-1">Nowe</a>
-                <a href="#" th:href="@{/panel/zamowienia(status=${T(com.bookstore.util.OrderStatus).IN_PROGRESS.name()})}"
+                <a th:href="@{/panel/zamowienia(status=${T(com.bookstore.util.OrderStatus).IN_PROGRESS.name()})}"
                    class="btn btn-primary mx-1">W realizacji</a>
-                <a href="#" th:href="@{/panel/zamowienia(status=${T(com.bookstore.util.OrderStatus).COMPLETE.name()})}"
+                <a th:href="@{/panel/zamowienia(status=${T(com.bookstore.util.OrderStatus).COMPLETE.name()})}"
                    class="btn btn-success mx-1">Zrealizowane</a>
             </div>
         </div>
@@ -48,7 +48,7 @@
                     <td th:case="${T(com.bookstore.util.OrderStatus).COMPLETE}">Zrealizowane</td>
                 </th:block>
                 <td class="btn btn-sm btn-primary">
-                    <a href="#" th:href="@{|/panel/zamowienie/${order.id}|}" class="btn btn-primary">Edytuj</a>
+                    <a th:href="@{|/panel/zamowienie/${order.id}|}" class="btn btn-primary">Edytuj</a>
                 </td>
             </tr>
             </tbody>

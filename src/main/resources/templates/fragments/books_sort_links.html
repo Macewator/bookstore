@@ -7,10 +7,11 @@
     <link rel="stylesheet" type="text/css" th:href="@{/css/styles.css}"/>
 </head>
 <body>
-<div th:fragment="sort_links">
-    <h6 class="text-white mt-4 ml-4">Sortowanie</h6>
-    <p> Tytuł</p>
-    <a class="icon-a"
+
+<ul class="list" th:fragment="sort_links">
+    <h5><strong>Sortowanie</strong></h5>
+    <p style="display: inline">Tytuł</p>
+    <a class="icon-a" style="margin-left: 33px"
        th:href="@{/books/sort(option='up',status=${status},search=${search},value=${value},category=${category},sort_type='title',page=${current_page})}">
         <i class="fa fa-chevron-circle-up" aria-hidden="true"></i>
     </a>
@@ -18,8 +19,8 @@
        th:href="@{/books/sort(option='down',status=${status},search=${search},value=${value},category=${category},sort_type='title',page=${current_page})}">
         <i class="fa fa-chevron-circle-down" aria-hidden="true"></i>
     </a>
-    <p>Autor</p>
-    <a class="icon-a"
+    <p style="display: inline">Autor</p>
+    <a class="icon-a" style="margin-left: 28px"
        th:href="@{/books/sort(type='author',option='up',status=${status},search=${search},value=${value},category=${category},sort_type='author',page=${current_page})}">
         <i class="fa fa-chevron-circle-up" aria-hidden="true"></i>
     </a>
@@ -27,7 +28,7 @@
        th:href="@{/books/sort(type='author',option='down',status=${status},search=${search},value=${value},category=${category},sort_type='author',page=${current_page})}">
         <i class="fa fa-chevron-circle-down" aria-hidden="true"></i>
     </a>
-    <p>Wydawca</p>
+    <p style="display: inline">Wydawca</p>
     <a class="icon-a"
        th:href="@{/books/sort(type='publisher',option='up',status=${status},search=${search},value=${value},category=${category},sort_type='author',page=${current_page})}">
         <i class="fa fa-chevron-circle-up" aria-hidden="true"></i>
@@ -36,8 +37,8 @@
        th:href="@{/books/sort(type='publisher',option='down',status=${status},search=${search},value=${value},category=${category},sort_type='author',page=${current_page})}">
         <i class="fa fa-chevron-circle-down" aria-hidden="true"></i>
     </a>
-    <p>Cena</p>
-    <a class="icon-a"
+    <p style="display: inline">Cena</p>
+    <a class="icon-a" style="margin-left: 32px"
        th:href="@{/books/sort(type='price',option='up',status=${status},search=${search},value=${value},category=${category},sort_type='author',page=${current_page})}">
         <i class="fa fa-chevron-circle-up" aria-hidden="true"></i>
     </a>
@@ -45,11 +46,11 @@
        th:href="@{/books/sort(type='price',option='down',status=${status},search=${search},value=${value},category=${category},sort_type='author',page=${current_page})}">
         <i class="fa fa-chevron-circle-down" aria-hidden="true"></i>
     </a>
-</div>
+</ul>
 
-<div th:fragment="entity_sort_links">
-    <h6 class="text-white mt-4 ml-4">Sortowanie</h6>
-    <p> Tytuł</p>
+<ul class="list" th:fragment="entity_sort_links">
+    <h5><strong>Sortowanie</strong></h5>
+    <p style="display: inline">Tytuł</p>
     <a class="icon-a"
        th:href="@{/__${entity_url}__/books/sort(option='up',status=${status},search=${search},value=${value},category=${category},sort_type='title',page=${current_page})}">
         <i class="fa fa-chevron-circle-up" aria-hidden="true"></i>
@@ -59,7 +60,7 @@
         <i class="fa fa-chevron-circle-down" aria-hidden="true"></i>
     </a>
     <div th:if="${entity_type.equals('publisher')}">
-        <p>Autor</p>
+        <p style="display: inline">Autor</p>
         <a class="icon-a"
            th:href="@{/__${entity_url}__/books/sort(type='author',option='up',status=${status},search=${search},value=${value},category=${category},sort_type='author',page=${current_page})}">
             <i class="fa fa-chevron-circle-up" aria-hidden="true"></i>
@@ -70,7 +71,7 @@
         </a>
     </div>
     <div th:if="${entity_type.equals('author')}">
-        <p>Wydawca</p>
+        <p style="display: inline">Wydawca</p>
         <a class="icon-a"
            th:href="@{/__${entity_url}__/books/sort(type='publisher',option='up',status=${status},search=${search},value=${value},category=${category},sort_type='author',page=${current_page})}">
             <i class="fa fa-chevron-circle-up" aria-hidden="true"></i>
@@ -80,7 +81,7 @@
             <i class="fa fa-chevron-circle-down" aria-hidden="true"></i>
         </a>
     </div>
-    <p>Cena</p>
+    <p style="display: inline">Cena</p>
     <a class="icon-a"
        th:href="@{/__${entity_url}__/books/sort(type='price',option='up',status=${status},search=${search},value=${value},category=${category},sort_type='author',page=${current_page})}">
         <i class="fa fa-chevron-circle-up" aria-hidden="true"></i>
@@ -89,6 +90,7 @@
        th:href="@{/__${entity_url}__/books/sort(type='price',option='down',status=${status},search=${search},value=${value},category=${category},sort_type='author',page=${current_page})}">
         <i class="fa fa-chevron-circle-down" aria-hidden="true"></i>
     </a>
-</div>
+</ul>
+
 </body>
 </html>

@@ -13,15 +13,24 @@
 <div class="container-fluid">
     <h5 class="text-center mt-3" th:if="${message}" th:text="${message.getContent()}"></h5>
     <p class="text-center alert alert-danger" th:if="${exception}" th:text="${exception}"></p>
-    <div class="sidenav d-inline-block">
-        <h6 class="text-white mt-4 ml-4">Menu</h6>
-        <a class="text-a" th:href="@{/client/account}">Informacje</a>
-        <a class="text-a" th:href="@{/client/order}">Zamówienie</a>
-        <a class="text-a" th:href="@{/client/history}">Historia</a>
-        <a class="text-a" th:href="@{/client/payment}">Płatności</a>
-        <a class="text-a" th:href="@{/client/favorites}">Ulubione</a>
+
+    <div class="row">
+        <div class="col-2 sidebar1">
+            <div class="left-navigation">
+                <ul class="list">
+                    <h5><strong>Menu</strong></h5>
+                    <a class="nav-link" th:href="@{/client/account}">Informacje</a>
+                    <a class="nav-link" th:href="@{/client/order}">Zamówienie</a>
+                    <a class="nav-link" th:href="@{/client/history}">Historia</a>
+                    <a class="nav-link" th:href="@{/client/payment}">Płatności</a>
+                    <a class="nav-link" th:href="@{/client/favorites}">Ulubione</a>
+                </ul>
+            </div>
+        </div>
     </div>
+
     <th:block th:insert="fragments/client.html :: ${client_template}"></th:block>
+
 </div>
 
 <th:block th:insert="fragments/generals.html :: footer"></th:block>

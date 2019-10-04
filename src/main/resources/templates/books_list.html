@@ -13,19 +13,30 @@
 <th:block th:insert="fragments/generals.html :: navbar"></th:block>
 
 <div class="container-fluid">
-    <div class="sidenav">
-        <h6 class="text-white mt-4 ml-4">Spis</h6>
-        <a class="text-a" th:href="@{/books(page=1)}">Książki</a>
-        <a class="text-a" th:href="@{/authors}">Autorzy</a>
-        <a class="text-a" th:href="@{/publishers}">Wydawcy</a>
-        <h6 class="text-white mt-4 ml-4">Filtry</h6>
-        <a class="text-a" th:href="@{/__${entity_url}__/books/new(page=1)}">Nowości</a>
-        <a class="text-a" th:href="@{/__${entity_url}__/books/best(page=1)}">Bestsellery</a>
-        <a class="text-a" th:href="@{/__${entity_url}__/books(entity_id=${entity_id},page=1)}">Pełna oferta</a>
 
-        <th:block th:insert="fragments/books_sort_links.html :: entity_sort_links"></th:block>
+    <div class="row">
+        <div class="col-2 sidebar1">
+            <div class="left-navigation">
+                <ul class="list">
+                    <h5><strong>Spis</strong></h5>
+                    <a class="nav-link" th:href="@{/books(page=1)}">Książki</a>
+                    <a class="nav-link" th:href="@{/authors}">Autorzy</a>
+                    <a class="nav-link" th:href="@{/publishers}">Wydawcy</a>
+                </ul>
+                <br>
+                <ul class="list">
+                    <h5><strong>Filtry</strong></h5>
+                    <a class="nav-link" th:href="@{/__${entity_url}__/books/new(page=1)}">Nowości</a>
+                    <a class="nav-link" th:href="@{/__${entity_url}__/books/best(page=1)}">Bestsellery</a>
+                    <a class="nav-link" th:href="@{/__${entity_url}__/books(entity_id=${entity_id},page=1)}">Pełna oferta</a>
+                </ul>
 
+                <th:block th:insert="fragments/books_sort_links.html :: sort_links"></th:block>
+
+            </div>
+        </div>
     </div>
+
     <div class="row">
         <form class="col-4 offset-5 mt-3" action="#" th:action="@{/__${entity_url}__/books/search}" method="get">
             <label>
