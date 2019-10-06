@@ -60,7 +60,7 @@
                                 Dodaj do ulubionych
                             </a>
                         </th:block>
-                        <form class="form-inline" th:action="@{/books/rating}" method="get">
+                        <form sec:authorize="isAuthenticated()"  class="form-inline" th:action="@{/books/rating}" method="get">
                             <input type="hidden" name="isbn" th:value="*{isbn}">
                             <select class="custom-select custom-select-sm" name="rating">
                                 <option selected>Oceń książke</option>
