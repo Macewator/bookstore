@@ -2,12 +2,18 @@ package com.bookstore;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.context.ConfigurableApplicationContext;
+import org.springframework.boot.builder.SpringApplicationBuilder;
+import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
 
 @SpringBootApplication
-public class BookstoreApplication {
+public class BookstoreApplication extends SpringBootServletInitializer {
+
+    @Override
+    protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
+        return application.sources(BookstoreApplication.class);
+    }
 
     public static void main(String[] args) {
-        ConfigurableApplicationContext ctx = SpringApplication.run(BookstoreApplication.class, args);
+        SpringApplication.run(BookstoreApplication.class, args);
     }
 }

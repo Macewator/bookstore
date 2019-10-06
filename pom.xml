@@ -11,6 +11,7 @@
     <groupId>com.bookstore</groupId>
     <artifactId>bookstore</artifactId>
     <version>0.0.1-SNAPSHOT</version>
+    <packaging>war</packaging>
     <name>bookstore</name>
     <description>Demo project</description>
 
@@ -41,6 +42,12 @@
         </dependency>
 
         <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-tomcat</artifactId>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
             <version>8.0.17</version>
@@ -59,13 +66,32 @@
     </dependencies>
 
     <build>
-        <finalName>springApp</finalName>
+        <finalName>ROOT</finalName>
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.cargo</groupId>
+                <artifactId>cargo-maven2-plugin</artifactId>
+                <version>1.7.7</version>
                 <configuration>
-                    <executable>true</executable>
+                    <container>
+                        <containerId>tomcat9x</containerId>
+                        <home>${catalina.base}</home>
+                    </container>
+                    <configuration>
+                        <type>existing</type>
+                        <home>${catalina.base}</home>
+                    </configuration>
+                    <deployables>
+                        <deployable>
+                            <properties>
+                                <context>cargo</context>
+                            </properties>
+                        </deployable>
+                    </deployables>
                 </configuration>
             </plugin>
         </plugins>

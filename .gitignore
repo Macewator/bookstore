@@ -7,3 +7,12 @@
 HELP.md
 /target/
 !.mvn/wrapper/maven-wrapper.jar
+
+.metadata/
+.recommenders/
+**/target/
+**/.settings/
+**/.project
+**/.classpath
+**/.tern-project
+**/bin/
