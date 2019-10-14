@@ -9,7 +9,7 @@
 <body>
 <th:block th:fragment="order_links">
     <th:block>
-        <a class="btn btn-sm btn-success btn-block mb-1 mt-0 mt-0"
+        <a class="btn btn-sm btn-success btn-block mb-1 mt-0"
            th:if="${sort != null && !sort_type.equals('default')}"
            th:href="@{/order/sort/add(isbn=*{isbn},type=${type},option=${option},status=${status},search=${search},sort_type=${sort_type},page=${current_page})}">
             zamów
