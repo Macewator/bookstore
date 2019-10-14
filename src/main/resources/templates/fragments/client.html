@@ -243,10 +243,10 @@
                 <p th:text="|Autor: *{author.firstName} *{author.lastName}|">3 days ago</p>
             </div>
             <p class="mb-1" th:text="|Wydawca: *{publisher.publisherName}, (cena: *{price} zł)|"></p>
-
-            <th:block th:insert="fragments/books_favorites_links.html :: favorites_links"></th:block>
-            <th:block th:insert="fragments/books_order_links.html :: order_links"></th:block>
-
+            <a class="btn btn-sm btn-primary btn-block"
+               th:href="@{/client/favorites/remove(isbn=*{isbn}, entity_type=${T(com.bookstore.util.Type).TYPE_ACCOUNT})}">
+                usuń -
+            </a>
         </a>
     </div>
 </div>
