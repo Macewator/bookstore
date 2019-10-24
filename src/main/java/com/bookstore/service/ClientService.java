@@ -85,6 +85,15 @@ public class ClientService {
         return clientRepository.findByUserName(clientName);
     }
 
+    public void updateClient(ClientUpdateData clientUpdData, String userName) {
+        Client clientUpd = clientRepository.findByUserName(userName)
+                .orElseThrow(() -> new ClientNotFoundException("użytkonik nie istnieje"));
+        StringBuilder message = new StringBuilder();
+        checkUpdateData(message, clientUpd, clientUpdData);
+        updateClientData(clientUpd, clientUpdData);
+        clientRepository.save(clientUpd);
+    }
+
     public ClientUpdateData createClientUpdData(String userName) {
         Client client = clientRepository.findByUserName(userName)
                 .orElseThrow(() -> new ClientNotFoundException("użytkonik nie istnieje"));
@@ -93,15 +102,6 @@ public class ClientService {
         clientUpdateData.setUserInfo(client.getUserInfo());
         clientUpdateData.setAddress(client.getAddress());
         return clientUpdateData;
-    }
-
-    public void updateClient(ClientUpdateData clientUpdData, String userName) {
-        Client clientUpd = clientRepository.findByUserName(userName)
-                .orElseThrow(() -> new ClientNotFoundException("użytkonik nie istnieje"));
-        StringBuilder message = new StringBuilder();
-        checkUpdateData(message, clientUpd, clientUpdData);
-        updateClientData(clientUpd, clientUpdData);
-        clientRepository.save(clientUpd);
     }
 
     private void updateClientData(Client clientUpd, ClientUpdateData clientUpdData) {

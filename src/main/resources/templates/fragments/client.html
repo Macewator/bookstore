@@ -236,14 +236,14 @@
     </div>
     <div class="list-group col-6 offset-3 mt-4 shadow p-3 mb-5 d-inline-block">
         <h5 class="text-center font-weight-bold mb-1">Ulubione</h5>
-        <a href="#" class="list-group-item list-group-item-action flex-column align-items-start"
+        <a class="list-group-item list-group-item-action flex-column align-items-start"
            th:each="book: ${books}" th:object="${book}" th:href="@{/books/details(isbn=${book.isbn})}">
             <div class="d-flex w-100 justify-content-between">
                 <h5 class="mb-1 font-weight-bold" th:text="|Tytuł: *{title}|">List group item heading</h5>
                 <p th:text="|Autor: *{author.firstName} *{author.lastName}|">3 days ago</p>
             </div>
             <p class="mb-1" th:text="|Wydawca: *{publisher.publisherName}, (cena: *{price} zł)|"></p>
-            <a class="btn btn-sm btn-primary btn-block"
+            <a class="btn btn-sm btn-warning btn-block"
                th:href="@{/client/favorites/remove(isbn=*{isbn}, entity_type=${T(com.bookstore.util.Type).TYPE_ACCOUNT})}">
                 usuń -
             </a>
@@ -251,5 +251,6 @@
     </div>
 </div>
 </div>
+
 </body>
 </html>
